@@ -1,0 +1,17 @@
+{
+  "name": "mailkite/mailkite",
+  "description": "Official MailKite SDK for PHP — send and manage email over your own authenticated domain.",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://mailkite.dev/docs/libraries",
+  "require": {
+    "php": ">=7.4",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MailKite\\": "src/"
+    }
+  }
+}

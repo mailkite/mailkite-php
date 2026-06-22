@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+// Conformance runner: drive the PHP SDK through the shared cases and print one
+// JSON line per case. Invoked by ../../conformance/run.mjs.
+
+require __DIR__ . '/../src/MailKiteException.php';
+require __DIR__ . '/../src/Client.php';
+
+use MailKite\Client;
+use MailKite\MailKiteException;
+
+$cases = json_decode(file_get_contents(getenv('MK_CASES')), true)['cases'];
+$mk = new Client(getenv('MK_API_KEY'), getenv('MK_BASE_URL'));
+
+function call(Client $mk, string $m, array $a)
+{
+    switch ($m) {
+        case 'send': return $mk->send($a);
+        case 'listDomains': return $mk->listDomains();
+        case 'createDomain': return $mk->createDomain($a);
+        case 'getDomain': return $mk->getDomain($a['id']);
+        case 'deleteDomain': return $mk->deleteDomain($a['id']);
+        case 'verifyDomain': return $mk->verifyDomain($a['id']);
+        case 'setWebhook': return $mk->setWebhook($a['id'], ['url' => $a['url']]);
+        case 'deleteWebhook': return $mk->deleteWebhook($a['id']);
+        case 'testWebhook': return $mk->testWebhook($a['id']);
+        case 'listRoutes': return $mk->listRoutes();
+        case 'createRoute': return $mk->createRoute($a);
+        case 'listMessages': return $mk->listMessages();
+        case 'getMessage': return $mk->getMessage($a['id']);
+        case 'retryDelivery': return $mk->retryDelivery($a['id']);
+        case 'verifyWebhook': return $mk->verifyWebhook($a['signature'], $a['payload'], $a['secret'], (int) $a['toleranceMs']);
+    }
+    throw new \RuntimeException("unknown method $m");
+}
+
+foreach ($cases as $c) {
+    try {
+        $result = call($mk, $c['method'], $c['args']);
+        echo json_encode(['name' => $c['name'], 'result' => $result]) . "\n";
+    } catch (MailKiteException $e) {
+        echo json_encode(['name' => $c['name'], 'error' => ['status' => $e->status, 'message' => $e->getMessage()]]) . "\n";
+    }
+}
