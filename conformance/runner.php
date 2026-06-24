@@ -18,6 +18,12 @@ function call(Client $mk, string $m, array $a)
 {
     switch ($m) {
         case 'send': return $mk->send($a);
+        case 'agent': return $mk->agent($a);
+        case 'route': return $mk->route($a);
+        case 'listTemplates': return $mk->listTemplates();
+        case 'listBaseTemplates': return $mk->listBaseTemplates();
+        case 'getTemplate': return $mk->getTemplate($a['id']);
+        case 'createTemplate': return $mk->createTemplate($a);
         case 'listDomains': return $mk->listDomains();
         case 'createDomain': return $mk->createDomain($a);
         case 'getDomain': return $mk->getDomain($a['id']);

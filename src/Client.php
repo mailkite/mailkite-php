@@ -63,9 +63,54 @@ class Client
     }
 
     // --- Sending ----------------------------------------------------------
+    /**
+     * Send a message. Keys: from, to, text/html, etc. `subject` is optional
+     * when a template supplies it. Pass `templateId` (a tpl_… or base_…) to
+     * render a stored template and `templateData` (an array) to fill its
+     * variables.
+     */
     public function send($message)
     {
         return $this->request('POST', '/v1/send', $message);
+    }
+
+    /**
+     * Hand a message to the agent. Keys: text (required), plus optional
+     * subject, from, html, routeId, address, model.
+     */
+    public function agent($message)
+    {
+        return $this->request('POST', '/v1/agent', $message);
+    }
+
+    /**
+     * Route a message. Keys: from (required), plus optional routeId,
+     * address, subject, text, html.
+     */
+    public function route($message)
+    {
+        return $this->request('POST', '/v1/route', $message);
+    }
+
+    // --- Templates --------------------------------------------------------
+    public function listTemplates()
+    {
+        return $this->request('GET', '/api/templates');
+    }
+
+    public function listBaseTemplates()
+    {
+        return $this->request('GET', '/api/templates/base');
+    }
+
+    public function getTemplate(string $id)
+    {
+        return $this->request('GET', "/api/templates/$id");
+    }
+
+    public function createTemplate($body)
+    {
+        return $this->request('POST', '/api/templates', $body);
     }
 
     // --- Domains ----------------------------------------------------------

@@ -29,7 +29,7 @@ Point at a different base URL with `new \MailKite\Client($key, 'https://api.mail
 
 ## Methods
 
-`send($message)`, `listDomains()`, `createDomain($body)`, `getDomain($id)`,
+`send($message)`, `agent($message)`, `route($message)`, `listDomains()`, `createDomain($body)`, `getDomain($id)`,
 `deleteDomain($id)`, `verifyDomain($id)`, `setWebhook($id, $body)`,
 `deleteWebhook($id)`, `testWebhook($id)`, `checkDomainAvailability($domain)`,
 `registerDomain($body)`, `listRoutes()`, `createRoute($body)`,
