@@ -75,13 +75,148 @@ class Client
     }
 
     /**
-     * Upload a file (base64 `content`) and get back a secure, time-limited URL to
-     * reference as a send() attachment ({ filename, url }) or link inline —
-     * instead of base64-inlining large files on every send.
+     * Extension → MIME type map for guessing the Content-Type of a raw upload.
+     */
+    private const ATTACHMENT_MIME_TYPES = [
+        'pdf' => 'application/pdf',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'svg' => 'image/svg+xml',
+        'csv' => 'text/csv',
+        'txt' => 'text/plain',
+        'html' => 'text/html',
+        'json' => 'application/json',
+        'zip' => 'application/zip',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'ics' => 'text/calendar',
+        'ical' => 'text/calendar',
+    ];
+
+    /** Guess a Content-Type from a filename's extension, defaulting to octet-stream. */
+    private static function guessContentType(?string $filename): string
+    {
+        if ($filename === null || $filename === '') {
+            return 'application/octet-stream';
+        }
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        return self::ATTACHMENT_MIME_TYPES[$ext] ?? 'application/octet-stream';
+    }
+
+    /**
+     * Upload a file and get back a secure, time-limited URL to reference as a
+     * send() attachment ({ filename, url }) or link inline — instead of
+     * base64-inlining large files on every send.
+     *
+     * Provide the file ONE of four ways (checked in this order):
+     *   - `url`     — MailKite fetches & re-hosts the file at this URL.
+     *   - `bytes`   — raw binary string, uploaded as the request body.
+     *   - `path`    — local file path; read off disk then uploaded as raw bytes.
+     *   - `content` — base64-encoded string, sent as a JSON body.
+     * Optional: `filename`, `contentType`, `retentionDays`.
      */
     public function uploadAttachment($file)
     {
-        return $this->request('POST', '/v1/attachments', $file);
+        $filename = $file['filename'] ?? null;
+        $contentType = $file['contentType'] ?? null;
+        $retentionDays = $file['retentionDays'] ?? null;
+
+        // 1. url → JSON body, MailKite fetches & re-hosts.
+        if (isset($file['url'])) {
+            $body = ['url' => $file['url']];
+            if ($filename !== null) {
+                $body['filename'] = $filename;
+            }
+            if ($contentType !== null) {
+                $body['contentType'] = $contentType;
+            }
+            if ($retentionDays !== null) {
+                $body['retentionDays'] = $retentionDays;
+            }
+            return $this->request('POST', '/v1/attachments', $body);
+        }
+
+        // 2. bytes → raw binary upload.
+        if (isset($file['bytes'])) {
+            return $this->requestBinary($file['bytes'], $filename, $contentType, $retentionDays);
+        }
+
+        // 3. path → read off disk, then raw binary upload.
+        if (isset($file['path'])) {
+            $path = $file['path'];
+            $bytes = file_get_contents($path);
+            if ($bytes === false) {
+                throw new \RuntimeException("could not read file: $path");
+            }
+            if ($filename === null) {
+                $filename = basename($path);
+            }
+            if ($contentType === null) {
+                $contentType = self::guessContentType($filename);
+            }
+            return $this->requestBinary($bytes, $filename, $contentType, $retentionDays);
+        }
+
+        // 4. content → base64 JSON body (existing behavior).
+        if (isset($file['content'])) {
+            $body = ['content' => $file['content']];
+            if ($filename !== null) {
+                $body['filename'] = $filename;
+            }
+            if ($contentType !== null) {
+                $body['contentType'] = $contentType;
+            }
+            if ($retentionDays !== null) {
+                $body['retentionDays'] = $retentionDays;
+            }
+            return $this->request('POST', '/v1/attachments', $body);
+        }
+
+        throw new \InvalidArgumentException('uploadAttachment needs one of: url, bytes, path, content');
+    }
+
+    /**
+     * Raw binary upload to /v1/attachments. Body is the raw file bytes (not JSON,
+     * not multipart); filename and retentionDays go in the query string.
+     */
+    private function requestBinary(string $bytes, ?string $filename, ?string $contentType, $retentionDays)
+    {
+        $query = 'filename=' . rawurlencode((string) $filename);
+        if ($retentionDays !== null) {
+            $query .= '&retentionDays=' . rawurlencode((string) $retentionDays);
+        }
+        $contentType = $contentType ?? self::guessContentType($filename);
+
+        $ch = curl_init($this->baseUrl . '/v1/attachments?' . $query);
+        $headers = [
+            'Authorization: Bearer ' . $this->apiKey,
+            'Content-Type: ' . $contentType,
+        ];
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $bytes);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $raw = curl_exec($ch);
+        if ($raw === false) {
+            $err = curl_error($ch);
+            curl_close($ch);
+            throw new MailKiteException(0, $err ?: 'request failed');
+        }
+        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $data = $raw === '' ? null : json_decode($raw, true);
+        if ($status < 200 || $status >= 300) {
+            $message = is_array($data) && isset($data['error']) ? $data['error'] : "HTTP $status";
+            throw new MailKiteException($status, $message, $data);
+        }
+        return $data;
     }
 
     /**
