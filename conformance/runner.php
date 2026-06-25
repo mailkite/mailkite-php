@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Conformance runner: drive the PHP SDK through the shared cases and print one
 // JSON line per case. Invoked by ../../conformance/run.mjs.
 
+require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../src/MailKiteException.php';
 require __DIR__ . '/../src/Client.php';
 
@@ -40,6 +41,9 @@ function call(Client $mk, string $m, array $a)
         case 'getMessage': return $mk->getMessage($a['id']);
         case 'retryDelivery': return $mk->retryDelivery($a['id']);
         case 'verifyWebhook': return $mk->verifyWebhook($a['signature'], $a['payload'], $a['secret'], (int) $a['toleranceMs']);
+        case 'replyOk': return $mk->replyOk();
+        case 'decrypt': return $mk->decrypt($a['envelope'], $a['privateKey']);
+        case 'encryptRoundtrip': return $mk->decrypt($mk->encrypt($a['plaintext'], $a['publicKey']), $a['privateKey']);
     }
     throw new \RuntimeException("unknown method $m");
 }

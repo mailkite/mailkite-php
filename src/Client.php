@@ -226,4 +226,111 @@ class Client
         $expected = hash_hmac('sha256', $t . '.' . $payload, $secret);
         return hash_equals($expected, $v1);
     }
+
+    /**
+     * The canonical body an inbound webhook handler returns to ack an event.
+     * Local, no network.
+     */
+    public function replyOk(): string
+    {
+        return '{"status":"ok"}';
+    }
+
+    // --- At-rest encryption ----------------------------------------------
+    // Hybrid envelope, byte-compatible with MailKite's WebCrypto scheme:
+    //   1. a fresh AES-256-GCM content key encrypts the plaintext,
+    //   2. the content key is wrapped with the recipient's RSA-OAEP (SHA-256) public key.
+    // Only RSA-OAEP-SHA256 is interoperable here; PHP's openssl_public_encrypt only
+    // offers OAEP-SHA1, so we use phpseclib v3 for the key wrap/unwrap.
+
+    /** Strip a PEM wrapper to its base64-decoded DER body. */
+    private static function pemToDer(string $pem): string
+    {
+        $body = preg_replace('/-----BEGIN [^-]+-----|-----END [^-]+-----|\s+/', '', $pem);
+        if ($body === '' || $body === null) {
+            throw new \InvalidArgumentException('empty or malformed PEM');
+        }
+        $der = base64_decode($body, true);
+        if ($der === false) {
+            throw new \InvalidArgumentException('malformed PEM body');
+        }
+        return $der;
+    }
+
+    /**
+     * Encrypt a UTF-8 string to an at-rest envelope (JSON string).
+     * `$publicKey` is an RSA public key in SPKI/PEM form. Local, no network.
+     */
+    public function encrypt(string $plaintext, string $publicKey): string
+    {
+        $spkiDer = self::pemToDer($publicKey);
+        $fp = strtolower(bin2hex(hash('sha256', $spkiDer, true)));
+
+        // 1. Fresh AES-256-GCM content key + 12-byte IV; encrypt the plaintext.
+        $rawKey = random_bytes(32);
+        $iv = random_bytes(12);
+        $tag = '';
+        $ct = openssl_encrypt($plaintext, 'aes-256-gcm', $rawKey, OPENSSL_RAW_DATA, $iv, $tag, '', 16);
+        if ($ct === false) {
+            throw new \RuntimeException('AES-GCM encryption failed');
+        }
+        // WebCrypto appends the 16-byte auth tag to the ciphertext.
+        $ciphertext = $ct . $tag;
+
+        // 2. Wrap the content key with RSA-OAEP (SHA-256 hash + MGF1-SHA256).
+        $rsa = \phpseclib3\Crypt\PublicKeyLoader::load($publicKey)
+            ->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)
+            ->withHash('sha256')
+            ->withMGFHash('sha256');
+        $wrapped = $rsa->encrypt($rawKey);
+
+        return json_encode([
+            'v' => 1,
+            'keyAlg' => 'RSA-OAEP-256',
+            'fp' => $fp,
+            'enc' => 'A256GCM',
+            'iv' => base64_encode($iv),
+            'wrappedKey' => base64_encode($wrapped),
+            'ciphertext' => base64_encode($ciphertext),
+        ]);
+    }
+
+    /**
+     * Decrypt an at-rest envelope (JSON string) back to its UTF-8 plaintext.
+     * `$privateKey` is the matching RSA private key in PKCS#8/PEM form. Local, no network.
+     */
+    public function decrypt(string $envelope, string $privateKey): string
+    {
+        $env = json_decode($envelope, true);
+        if (!is_array($env)) {
+            throw new \InvalidArgumentException('malformed envelope JSON');
+        }
+
+        $iv = base64_decode($env['iv'], true);
+        $wrappedKey = base64_decode($env['wrappedKey'], true);
+        $ciphertext = base64_decode($env['ciphertext'], true);
+        if ($iv === false || $wrappedKey === false || $ciphertext === false) {
+            throw new \InvalidArgumentException('malformed envelope fields');
+        }
+        if (strlen($ciphertext) < 16) {
+            throw new \InvalidArgumentException('ciphertext too short for GCM tag');
+        }
+
+        // Split the appended 16-byte GCM tag back off the ciphertext.
+        $tag = substr($ciphertext, -16);
+        $body = substr($ciphertext, 0, -16);
+
+        // Unwrap the content key with RSA-OAEP (SHA-256 hash + MGF1-SHA256).
+        $rsa = \phpseclib3\Crypt\PublicKeyLoader::load($privateKey)
+            ->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)
+            ->withHash('sha256')
+            ->withMGFHash('sha256');
+        $rawKey = $rsa->decrypt($wrappedKey);
+
+        $plaintext = openssl_decrypt($body, 'aes-256-gcm', $rawKey, OPENSSL_RAW_DATA, $iv, $tag, '');
+        if ($plaintext === false) {
+            throw new \RuntimeException('AES-GCM decryption failed');
+        }
+        return $plaintext;
+    }
 }
