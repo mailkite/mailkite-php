@@ -1,5 +1,10 @@
 <p align="center">
-  <a href="https://mailkite.dev"><img src="https://mailkite.dev/brand/logo-email.png" alt="MailKite" height="56"></a>
+  <a href="https://mailkite.dev">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mailkite.dev/brand/logo-email-dark.png">
+      <img src="https://mailkite.dev/brand/logo-email.png" alt="MailKite" height="56">
+    </picture>
+  </a>
 </p>
 
 <h1 align="center">MailKite for PHP</h1>
