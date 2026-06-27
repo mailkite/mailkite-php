@@ -35,6 +35,7 @@ function call(Client $mk, string $m, array $a)
         case 'deleteWebhook': return $mk->deleteWebhook($a['id']);
         case 'testWebhook': return $mk->testWebhook($a['id']);
         case 'checkDomainAvailability': return $mk->checkDomainAvailability($a['domain']);
+        case 'semanticSearch': return $mk->semanticSearch($a['query']);
         case 'registerDomain': return $mk->registerDomain($a);
         case 'listRoutes': return $mk->listRoutes();
         case 'createRoute': return $mk->createRoute($a);

@@ -309,6 +309,12 @@ class Client
         return $this->request('POST', '/api/domains/register', $body);
     }
 
+    // --- Docs -------------------------------------------------------------
+    public function semanticSearch(string $query)
+    {
+        return $this->request('GET', '/v1/docs/search?query=' . rawurlencode($query));
+    }
+
     // --- Routes -----------------------------------------------------------
     public function listRoutes()
     {
