@@ -84,7 +84,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`createRoute`](docs/createRoute.md) | Create a route (match, action, destination). |
 | [`agent`](docs/agent.md) | Send a message to one of your inbox agents and get its reply. Defaults to the account's… |
 | [`route`](docs/route.md) | Route a message to one of your registered routes (by `routeId` or `address`), running… |
-| [`listMessages`](docs/listMessages.md) | List stored messages. |
+| [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally page with `before` (a `received_at`… |
 | [`getMessage`](docs/getMessage.md) | Get a message with deliveries + attachments. |
 | [`retryDelivery`](docs/retryDelivery.md) | Re-deliver a stored message to its webhook. |
 | [`listLists`](docs/listLists.md) | List your contact lists (static, curated broadcast audiences), each with its member count. |
@@ -92,7 +92,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`getList`](docs/getList.md) | Get one contact list with its member count. |
 | [`updateList`](docs/updateList.md) | Rename a contact list. |
 | [`deleteList`](docs/deleteList.md) | Delete a contact list. The list is removed; the contacts themselves are kept. |
-| [`listListContacts`](docs/listListContacts.md) | List the contacts that are members of a list. |
+| [`listListContacts`](docs/listListContacts.md) | List the contacts that are members of a list, newest first. Optionally page with `before`… |
 | [`addListContacts`](docs/addListContacts.md) | Add contacts (by id, ctr_…) to a list. Returns how many were newly added; contacts… |
 | [`removeListContact`](docs/removeListContact.md) | Remove one contact from a list (the contact itself is kept). |
 | [`listBroadcasts`](docs/listBroadcasts.md) | List your broadcasts (one-to-many sends) with status and send stats. |

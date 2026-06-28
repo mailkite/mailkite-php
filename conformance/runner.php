@@ -44,7 +44,7 @@ function call(Client $mk, string $m, array $a)
         case 'getList': return $mk->getList($a['id']);
         case 'updateList': return $mk->updateList($a['id'], ['name' => $a['name']]);
         case 'deleteList': return $mk->deleteList($a['id']);
-        case 'listListContacts': return $mk->listListContacts($a['id']);
+        case 'listListContacts': return $mk->listListContacts($a['id'], isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null);
         case 'addListContacts': return $mk->addListContacts($a['id'], ['contactIds' => $a['contactIds']]);
         case 'removeListContact': return $mk->removeListContact($a['id'], $a['contactId']);
         case 'listBroadcasts': return $mk->listBroadcasts();
@@ -53,7 +53,7 @@ function call(Client $mk, string $m, array $a)
         case 'updateBroadcast': return $mk->updateBroadcast($a['id'], ['subject' => $a['subject']]);
         case 'deleteBroadcast': return $mk->deleteBroadcast($a['id']);
         case 'sendBroadcast': return $mk->sendBroadcast($a['id'], isset($a['scheduledAt']) ? ['scheduledAt' => $a['scheduledAt']] : null);
-        case 'listMessages': return $mk->listMessages();
+        case 'listMessages': return $mk->listMessages(isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null);
         case 'getMessage': return $mk->getMessage($a['id']);
         case 'retryDelivery': return $mk->retryDelivery($a['id']);
         case 'verifyWebhook': return $mk->verifyWebhook($a['signature'], $a['payload'], $a['secret'], (int) $a['toleranceMs']);

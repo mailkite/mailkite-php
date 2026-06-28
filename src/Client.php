@@ -327,9 +327,17 @@ class Client
     }
 
     // --- Messages & deliveries -------------------------------------------
-    public function listMessages()
+    public function listMessages(?int $before = null, ?int $limit = null)
     {
-        return $this->request('GET', '/api/messages');
+        $query = [];
+        if ($before !== null) {
+            $query[] = 'before=' . rawurlencode((string) $before);
+        }
+        if ($limit !== null) {
+            $query[] = 'limit=' . rawurlencode((string) $limit);
+        }
+        $path = '/api/messages' . (count($query) > 0 ? '?' . implode('&', $query) : '');
+        return $this->request('GET', $path);
     }
 
     public function getMessage(string $id)
@@ -368,9 +376,17 @@ class Client
         return $this->request('DELETE', "/api/lists/$id");
     }
 
-    public function listListContacts(string $id)
+    public function listListContacts(string $id, ?int $before = null, ?int $limit = null)
     {
-        return $this->request('GET', "/api/lists/$id/contacts");
+        $query = [];
+        if ($before !== null) {
+            $query[] = 'before=' . rawurlencode((string) $before);
+        }
+        if ($limit !== null) {
+            $query[] = 'limit=' . rawurlencode((string) $limit);
+        }
+        $path = "/api/lists/$id/contacts" . (count($query) > 0 ? '?' . implode('&', $query) : '');
+        return $this->request('GET', $path);
     }
 
     public function addListContacts(string $id, $body)
