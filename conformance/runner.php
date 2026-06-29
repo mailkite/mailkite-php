@@ -53,7 +53,7 @@ function call(Client $mk, string $m, array $a)
         case 'updateBroadcast': return $mk->updateBroadcast($a['id'], ['subject' => $a['subject']]);
         case 'deleteBroadcast': return $mk->deleteBroadcast($a['id']);
         case 'sendBroadcast': return $mk->sendBroadcast($a['id'], isset($a['scheduledAt']) ? ['scheduledAt' => $a['scheduledAt']] : null);
-        case 'listMessages': return $mk->listMessages(isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null);
+        case 'listMessages': return $mk->listMessages(isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null, isset($a['search']) ? (string) $a['search'] : null);
         case 'getMessage': return $mk->getMessage($a['id']);
         case 'retryDelivery': return $mk->retryDelivery($a['id']);
         case 'verifyWebhook': return $mk->verifyWebhook($a['signature'], $a['payload'], $a['secret'], (int) $a['toleranceMs']);

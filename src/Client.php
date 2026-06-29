@@ -327,7 +327,7 @@ class Client
     }
 
     // --- Messages & deliveries -------------------------------------------
-    public function listMessages(?int $before = null, ?int $limit = null)
+    public function listMessages(?int $before = null, ?int $limit = null, ?string $search = null)
     {
         $query = [];
         if ($before !== null) {
@@ -335,6 +335,9 @@ class Client
         }
         if ($limit !== null) {
             $query[] = 'limit=' . rawurlencode((string) $limit);
+        }
+        if ($search !== null) {
+            $query[] = 'search=' . rawurlencode($search);
         }
         $path = '/api/messages' . (count($query) > 0 ? '?' . implode('&', $query) : '');
         return $this->request('GET', $path);
