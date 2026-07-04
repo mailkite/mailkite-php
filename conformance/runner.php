@@ -39,6 +39,7 @@ function call(Client $mk, string $m, array $a)
         case 'registerDomain': return $mk->registerDomain($a);
         case 'listRoutes': return $mk->listRoutes();
         case 'createRoute': return $mk->createRoute($a);
+        case 'deleteRoute': return $mk->deleteRoute($a['id']);
         case 'listLists': return $mk->listLists();
         case 'createList': return $mk->createList($a);
         case 'getList': return $mk->getList($a['id']);

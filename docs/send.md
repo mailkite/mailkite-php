@@ -19,6 +19,7 @@ Send a message over a verified domain. Pass `templateId` (+ optional `templateDa
 | `bcc` | string \| array |  |  |
 | `replyTo` | string |  |  |
 | `inReplyTo` | string |  |  |
+| `headers` | object |  | Extra raw MIME headers, applied after threading headers (caller wins). Use for what the… |
 | `attachments` | array |  |  |
 
 ## Returns

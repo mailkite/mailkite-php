@@ -326,6 +326,11 @@ class Client
         return $this->request('POST', '/api/routes', $body);
     }
 
+    public function deleteRoute(string $id)
+    {
+        return $this->request('DELETE', '/api/routes/' . $id);
+    }
+
     // --- Messages & deliveries -------------------------------------------
     public function listMessages(?int $before = null, ?int $limit = null, ?string $search = null)
     {

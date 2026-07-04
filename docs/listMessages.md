@@ -1,6 +1,6 @@
 # `listMessages`
 
-List stored messages, newest first. Optionally page with `before` (a `received_at` cursor) and `limit`; omit both for the default newest 100. Response is a bare array — paginate by passing the last row's `received_at` as the next `before`.
+List stored messages, newest first. Optionally filter with `search` (matches sender, recipient, or subject) and page with `before` (a `received_at` cursor) and `limit`; omit all for the default newest 100. Response is a bare array — paginate by passing the last row's `received_at` as the next `before`.
 
 **HTTP:** `GET /api/messages`
 
@@ -10,6 +10,7 @@ List stored messages, newest first. Optionally page with `before` (a `received_a
 | --- | --- | --- |
 | `before` | query (optional) | Cursor: return only messages with `received_at` strictly less than this (epoch ms). Omit for the first page. |
 | `limit` | query (optional) | Max rows to return, 1–200. Omitted = newest 100 (the pre-pagination default). |
+| `search` | query (optional) | Case-insensitive substring match over sender, recipient, and subject. Omit for no filter. |
 
 ## Returns
 

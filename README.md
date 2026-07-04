@@ -82,9 +82,10 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`registerDomain`](docs/registerDomain.md) | Register (buy) a domain on the customer's behalf; provisions mail DNS and adds it to the… |
 | [`listRoutes`](docs/listRoutes.md) | List inbound routing rules. |
 | [`createRoute`](docs/createRoute.md) | Create a route (match, action, destination). |
+| [`deleteRoute`](docs/deleteRoute.md) | Delete an inbound routing rule by id. Pair with createRoute to register and tear down a… |
 | [`agent`](docs/agent.md) | Send a message to one of your inbox agents and get its reply. Defaults to the account's… |
 | [`route`](docs/route.md) | Route a message to one of your registered routes (by `routeId` or `address`), running… |
-| [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally page with `before` (a `received_at`… |
+| [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally filter with `search` (matches sender… |
 | [`getMessage`](docs/getMessage.md) | Get a message with deliveries + attachments. |
 | [`retryDelivery`](docs/retryDelivery.md) | Re-deliver a stored message to its webhook. |
 | [`listLists`](docs/listLists.md) | List your contact lists (static, curated broadcast audiences), each with its member count. |
