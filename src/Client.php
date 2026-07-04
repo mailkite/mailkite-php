@@ -23,20 +23,42 @@ class Client
     /** Reject webhook events older than this (ms) to block replays. Pass 0 to disable. */
     public const DEFAULT_TOLERANCE_MS = 5 * 60 * 1000;
 
-    private string $apiKey;
+    private ?string $apiKey;
+    /** @var callable|null Returns a fresh Bearer token per request (for short-lived OAuth tokens). */
+    private $getToken;
     private string $baseUrl;
 
-    public function __construct(string $apiKey, string $baseUrl = 'https://api.mailkite.dev')
+    /**
+     * Authenticate with a Bearer token. Pass a token string (an API key `mk_live_…` OR an OAuth
+     * access token — both are Bearer credentials), or an options array:
+     *   ['apiKey' => '…'] / ['accessToken' => '…']  — a static token
+     *   ['getToken' => fn() => $freshToken]          — a callback invoked before each request
+     *   plus optional ['baseUrl' => '…'].
+     */
+    public function __construct($auth, string $baseUrl = 'https://api.mailkite.dev')
     {
-        $this->apiKey = $apiKey;
+        if (is_array($auth)) {
+            $this->apiKey = $auth['apiKey'] ?? $auth['accessToken'] ?? null;
+            $this->getToken = $auth['getToken'] ?? null;
+            $baseUrl = $auth['baseUrl'] ?? $baseUrl;
+        } else {
+            $this->apiKey = $auth;
+            $this->getToken = null;
+        }
         $this->baseUrl = rtrim($baseUrl, '/');
+    }
+
+    /** The Bearer token for one request: from the getToken callback if set, else the static token. */
+    private function token(): ?string
+    {
+        return $this->getToken !== null ? ($this->getToken)() : $this->apiKey;
     }
 
     /** Low-level request. Every method below is a one-liner on top of this. */
     public function request(string $method, string $path, $body = null)
     {
         $ch = curl_init($this->baseUrl . $path);
-        $headers = ['Authorization: Bearer ' . $this->apiKey];
+        $headers = ['Authorization: Bearer ' . $this->token()];
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         if ($body !== null) {
@@ -194,7 +216,7 @@ class Client
 
         $ch = curl_init($this->baseUrl . '/v1/attachments?' . $query);
         $headers = [
-            'Authorization: Bearer ' . $this->apiKey,
+            'Authorization: Bearer ' . $this->token(),
             'Content-Type: ' . $contentType,
         ];
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');

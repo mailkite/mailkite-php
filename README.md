@@ -46,6 +46,24 @@ $res = $mk->send([
 ]);
 ```
 
+## Authentication — API key or OAuth
+
+The credential is always a Bearer token, so an **OAuth access token** works anywhere an API key does. **Server-to-server code → API key; anything that renders on a public URL → OAuth** (each user acts as themselves, not through a shared key).
+
+```php
+// Server-to-server: a static API key (mk_live_…).
+$mk = new \MailKite\Client(getenv('MAILKITE_API_KEY'));
+
+// OAuth: a static access token…
+$mk = new \MailKite\Client(['accessToken' => $myOAuthToken]);
+
+// …or a getToken callback called before each request, so short-lived
+// OAuth access tokens stay fresh:
+$mk = new \MailKite\Client(['getToken' => fn() => currentSession()->accessToken]);
+```
+
+Get an OAuth token from MailKite's authorization server (`mcp.mailkite.dev`, OAuth 2.1 + PKCE). For browser/native apps use the client-side libraries, which run the whole flow.
+
 ## Examples
 
 Runnable examples live in [`examples/`](examples/) — send mail, verify webhooks, build an AI email agent, and log users in:
