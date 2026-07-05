@@ -13,6 +13,7 @@ Create a route (match, action, destination).
 | `destination` | string |  | Required for action webhook (URL) or forward (address). |
 | `agentPrompt` | string |  | Required for action agent — instructions for the inbox agent. |
 | `agentForwardTo` | array |  | For action agent: addresses the inbox agent's forward tool may send to. The agent can… |
+| `agentContext` | string |  | For action agent: how much mail the agent may read once the sender is verified (they… |
 
 ## Returns
 
