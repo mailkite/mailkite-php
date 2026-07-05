@@ -29,6 +29,7 @@ function call(Client $mk, string $m, array $a)
         case 'listDomains': return $mk->listDomains();
         case 'createDomain': return $mk->createDomain($a);
         case 'getDomain': return $mk->getDomain($a['id']);
+        case 'getWebhookSecret': return $mk->getWebhookSecret($a['id']);
         case 'deleteDomain': return $mk->deleteDomain($a['id']);
         case 'verifyDomain': return $mk->verifyDomain($a['id']);
         case 'setWebhook': return $mk->setWebhook($a['id'], ['url' => $a['url']]);

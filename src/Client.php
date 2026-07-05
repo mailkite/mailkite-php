@@ -296,6 +296,11 @@ class Client
         return $this->request('GET', "/api/domains/$id");
     }
 
+    public function getWebhookSecret(string $id)
+    {
+        return $this->request('GET', "/api/domains/$id/webhook/secret");
+    }
+
     public function deleteDomain(string $id)
     {
         return $this->request('DELETE', "/api/domains/$id");
