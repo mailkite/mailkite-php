@@ -46,24 +46,6 @@ $res = $mk->send([
 ]);
 ```
 
-## Authentication — API key or OAuth
-
-The credential is always a Bearer token, so an **OAuth access token** works anywhere an API key does. **Server-to-server code → API key; anything that renders on a public URL → OAuth** (each user acts as themselves, not through a shared key).
-
-```php
-// Server-to-server: a static API key (mk_live_…).
-$mk = new \MailKite\Client(getenv('MAILKITE_API_KEY'));
-
-// OAuth: a static access token…
-$mk = new \MailKite\Client(['accessToken' => $myOAuthToken]);
-
-// …or a getToken callback called before each request, so short-lived
-// OAuth access tokens stay fresh:
-$mk = new \MailKite\Client(['getToken' => fn() => currentSession()->accessToken]);
-```
-
-Get an OAuth token from MailKite's authorization server (`mcp.mailkite.dev`, OAuth 2.1 + PKCE). For browser/native apps use the client-side libraries, which run the whole flow.
-
 ## Examples
 
 Runnable examples live in [`examples/`](examples/) — send mail, verify webhooks, build an AI email agent, and log users in:
@@ -95,6 +77,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`verifyDomain`](docs/verifyDomain.md) | Check DNS and update status. |
 | [`setWebhook`](docs/setWebhook.md) | Set or replace the domain's catch-all webhook. |
 | [`deleteWebhook`](docs/deleteWebhook.md) | Remove the domain's webhook. |
+| [`getWebhookSecret`](docs/getWebhookSecret.md) | Get this domain's webhook signing secret (whsec_…) — the per-route secret used to verify… |
 | [`testWebhook`](docs/testWebhook.md) | Send a signed test event to the domain's webhook. |
 | [`checkDomainAvailability`](docs/checkDomainAvailability.md) | Check whether a domain is available to register, and at what price. Read-only — no charge. |
 | [`registerDomain`](docs/registerDomain.md) | Register (buy) a domain on the customer's behalf; provisions mail DNS and adds it to the… |
