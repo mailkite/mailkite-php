@@ -471,8 +471,13 @@ class Client
      * Local HMAC-SHA256 check — no network call. Pass the raw, unparsed body.
      *
      * @param int $toleranceMs reject events older than this many ms (0 disables).
+     *
+     * STATIC: verifying a signature needs no client — no base URL, no token — so requiring one is
+     * a barrier with nothing behind it. Matches the Node, Ruby, Python, Go and .NET SDKs, which all
+     * expose this at class/module level. PHP still permits `$client->verifyWebhook(...)` on a
+     * static, so no existing caller breaks.
      */
-    public function verifyWebhook(string $signature, string $payload, string $secret, int $toleranceMs = self::DEFAULT_TOLERANCE_MS): bool
+    public static function verifyWebhook(string $signature, string $payload, string $secret, int $toleranceMs = self::DEFAULT_TOLERANCE_MS): bool
     {
         if ($signature === '') {
             return false;

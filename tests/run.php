@@ -116,6 +116,11 @@ try {
     $v1 = '3d790f831e170ddba4d001f27532bf2c1fc68ebed52eef72fe453dfa1196b03c';
     $header = "t=1750000000000,v1=$v1";
 
+    // Callable on the CLASS, not just an instance — verifying a signature needs no client, and
+    // every other SDK exposes it that way. Python's being instance-only put a crashing
+    // MailKite.verify_webhook(...) on four published pages; pin the shape so PHP can't drift back.
+    check('verifyWebhook static call', Client::verifyWebhook($header, $payload, $secret, 0) === true);
+    check('verifyWebhook static rejects tampered', Client::verifyWebhook($header, "$payload ", $secret, 0) === false);
     check('verifyWebhook valid (tolerance 0)', $mk->verifyWebhook($header, $payload, $secret, 0) === true);
     check('verifyWebhook tampered body', $mk->verifyWebhook($header, "$payload ", $secret, 0) === false);
     check('verifyWebhook wrong secret', $mk->verifyWebhook($header, $payload, 'whsec_wrong', 0) === false);
