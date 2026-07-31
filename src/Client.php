@@ -334,6 +334,16 @@ class Client
         return $this->request('DELETE', "/api/domains/$id/webhook");
     }
 
+    public function setTrackingWebhook(string $id, $body)
+    {
+        return $this->request('PUT', "/api/domains/$id/tracking-webhook", $body);
+    }
+
+    public function deleteTrackingWebhook(string $id)
+    {
+        return $this->request('DELETE', "/api/domains/$id/tracking-webhook");
+    }
+
     public function testWebhook(string $id)
     {
         return $this->request('POST', "/api/domains/$id/webhook/test");

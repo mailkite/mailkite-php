@@ -77,6 +77,8 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`deleteDomain`](docs/deleteDomain.md) | Remove a domain. |
 | [`verifyDomain`](docs/verifyDomain.md) | Check DNS and update status. |
 | [`setWebhook`](docs/setWebhook.md) | Set or replace the domain's catch-all webhook. |
+| [`setTrackingWebhook`](docs/setTrackingWebhook.md) | Set or replace the domain's outbound tracking-event webhook: an HTTPS endpoint that… |
+| [`deleteTrackingWebhook`](docs/deleteTrackingWebhook.md) | Remove the domain's tracking-event webhook (engagement events stop). |
 | [`deleteWebhook`](docs/deleteWebhook.md) | Remove the domain's webhook. |
 | [`getWebhookSecret`](docs/getWebhookSecret.md) | Get this domain's webhook signing secret (whsec_…) — the per-route secret used to verify… |
 | [`testWebhook`](docs/testWebhook.md) | Send a signed test event to the domain's webhook. |

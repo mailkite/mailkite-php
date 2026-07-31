@@ -35,6 +35,8 @@ function call(Client $mk, string $m, array $a)
         case 'verifyDomain': return $mk->verifyDomain($a['id']);
         case 'setWebhook': return $mk->setWebhook($a['id'], ['url' => $a['url']]);
         case 'deleteWebhook': return $mk->deleteWebhook($a['id']);
+        case 'setTrackingWebhook': return $mk->setTrackingWebhook($a['id'], ['url' => $a['url']]);
+        case 'deleteTrackingWebhook': return $mk->deleteTrackingWebhook($a['id']);
         case 'testWebhook': return $mk->testWebhook($a['id']);
         case 'checkDomainAvailability': return $mk->checkDomainAvailability($a['domain']);
         case 'semanticSearch': return $mk->semanticSearch($a['query']);
