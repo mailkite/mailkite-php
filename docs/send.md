@@ -23,6 +23,7 @@ Send a message over a verified domain. Pass `templateId` (+ optional `templateDa
 | `attachments` | array |  |  |
 | `scheduledAt` | string,number |  | Send later: ISO 8601, simple relative natural language ("in 2 hours"), or a ms-epoch. A… |
 | `trackOpens` | boolean |  | Open-tracking override for this send (HTML only). Omitted → the from-domain's default… |
+| `trackClicks` | boolean |  | Click-tracking override for this send (HTML only): http(s) links are rewritten to a… |
 
 ## Returns
 

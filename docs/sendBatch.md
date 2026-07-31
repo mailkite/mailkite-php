@@ -21,6 +21,7 @@ Send one personalized message per recipient (up to 50) in a single call. Shared 
 | `attachments` | array |  | Attached to every message in the batch. Same shape as send()'s attachments. |
 | `scheduledAt` | string,number |  | Send later: ISO 8601, simple relative natural language ("in 2 hours"), or a ms-epoch. A… |
 | `trackOpens` | boolean |  | Open-tracking override for every message in the batch (HTML only). Omitted → the… |
+| `trackClicks` | boolean |  | Click-tracking override for every message in the batch (HTML only): http(s) links are… |
 
 ## Returns
 
