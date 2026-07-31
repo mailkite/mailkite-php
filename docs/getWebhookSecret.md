@@ -12,7 +12,7 @@ Get this domain's webhook signing secret (whsec_…) — the per-route secret us
 
 ## Returns
 
-`any`
+`webhook-secret-response` — see the [`webhook-secret-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

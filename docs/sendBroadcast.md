@@ -12,7 +12,7 @@ Send a broadcast now, or pass an ISO 8601 `scheduledAt` to schedule it. A one-cl
 
 ## Returns
 
-`any`
+`send-broadcast-response` — see the [`send-broadcast-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

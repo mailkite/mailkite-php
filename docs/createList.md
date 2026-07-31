@@ -12,7 +12,7 @@ Create a contact list. Returns the list with its id (lst_…); add contacts with
 
 ## Returns
 
-`any`
+`contact-list`
 
 ## Example
 

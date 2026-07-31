@@ -21,7 +21,7 @@ Edit a draft broadcast (any of from/subject/audience/html/… ). Drafts only.
 
 ## Returns
 
-`any`
+`broadcast`
 
 ## Example
 

@@ -12,7 +12,7 @@ Get one template (full: subject, html, text, theme). Works for your templates (t
 
 ## Returns
 
-`any`
+`template`
 
 ## Example
 

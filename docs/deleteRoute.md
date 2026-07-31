@@ -12,7 +12,7 @@ Delete an inbound routing rule by id. Pair with createRoute to register and tear
 
 ## Returns
 
-`any`
+`ok-response` — see the [`ok-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

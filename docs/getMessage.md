@@ -12,7 +12,7 @@ Get a message with deliveries + attachments.
 
 ## Returns
 
-`any`
+`message-detail`
 
 ## Example
 

@@ -14,7 +14,7 @@ List stored messages, newest first. Optionally filter with `search` (matches sen
 
 ## Returns
 
-`any`
+`message[]`
 
 ## Example
 

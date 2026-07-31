@@ -17,7 +17,7 @@ Create a route (match, action, destination).
 
 ## Returns
 
-`any`
+`route`
 
 ## Example
 

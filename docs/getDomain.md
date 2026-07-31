@@ -12,7 +12,7 @@ Get one domain with DNS records + webhook.
 
 ## Returns
 
-`any`
+`get-domain-response` — see the [`get-domain-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

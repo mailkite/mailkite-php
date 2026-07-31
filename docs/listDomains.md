@@ -10,7 +10,7 @@ _None._
 
 ## Returns
 
-`any`
+`domain[]`
 
 ## Example
 

@@ -19,6 +19,7 @@ function call(Client $mk, string $m, array $a)
 {
     switch ($m) {
         case 'send': return $mk->send($a);
+        case 'sendBatch': return $mk->sendBatch($a);
         case 'uploadAttachment': return $mk->uploadAttachment($a);
         case 'agent': return $mk->agent($a);
         case 'route': return $mk->route($a);
@@ -70,6 +71,8 @@ function call(Client $mk, string $m, array $a)
 }
 
 foreach ($cases as $c) {
+    // specOnly cases document routes with no SDK method — validate-cases.mjs checks them; skip here.
+    if (!empty($c['specOnly'])) continue;
     try {
         $result = call($mk, $c['method'], $c['args']);
         echo json_encode(['name' => $c['name'], 'result' => $result]) . "\n";

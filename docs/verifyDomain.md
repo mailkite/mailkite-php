@@ -12,7 +12,7 @@ Check DNS and update status.
 
 ## Returns
 
-`any`
+`verify-domain-response` — see the [`verify-domain-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

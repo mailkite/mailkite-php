@@ -12,7 +12,7 @@ Rename a contact list.
 
 ## Returns
 
-`any`
+`contact-list`
 
 ## Example
 

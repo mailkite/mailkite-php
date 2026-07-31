@@ -12,7 +12,7 @@ Delete a contact list. The list is removed; the contacts themselves are kept.
 
 ## Returns
 
-`any`
+`ok-response` — see the [`ok-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

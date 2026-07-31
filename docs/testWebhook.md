@@ -12,7 +12,7 @@ Send a signed test event to the domain's webhook.
 
 ## Returns
 
-`any`
+`test-webhook-response` — see the [`test-webhook-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

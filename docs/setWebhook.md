@@ -12,7 +12,7 @@ Set or replace the domain's catch-all webhook.
 
 ## Returns
 
-`any`
+`set-webhook-response` — see the [`set-webhook-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

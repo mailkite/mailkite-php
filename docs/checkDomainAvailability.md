@@ -12,7 +12,7 @@ Check whether a domain is available to register, and at what price. Read-only â€
 
 ## Returns
 
-`any`
+`domain-availability-response` â€” see the [`domain-availability-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

@@ -12,7 +12,7 @@ Re-deliver a stored message to its webhook.
 
 ## Returns
 
-`any`
+`retry-delivery-response` — see the [`retry-delivery-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

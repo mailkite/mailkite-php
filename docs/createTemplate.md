@@ -18,7 +18,7 @@ Create a template. Pass `baseId` to clone a base template into your own, or prov
 
 ## Returns
 
-`any`
+`template`
 
 ## Example
 

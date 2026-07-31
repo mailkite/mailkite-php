@@ -12,7 +12,7 @@ Remove a domain.
 
 ## Returns
 
-`any`
+`delete-domain-response` — see the [`delete-domain-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

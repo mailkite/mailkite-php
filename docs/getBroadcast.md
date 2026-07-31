@@ -12,7 +12,7 @@ Get one broadcast with its status and recipient summary.
 
 ## Returns
 
-`any`
+`broadcast`
 
 ## Example
 

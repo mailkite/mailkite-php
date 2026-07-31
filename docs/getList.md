@@ -12,7 +12,7 @@ Get one contact list with its member count.
 
 ## Returns
 
-`any`
+`contact-list`
 
 ## Example
 

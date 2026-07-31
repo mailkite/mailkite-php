@@ -12,14 +12,14 @@ Add contacts (by id, ctr_…) to a list. Returns how many were newly added; cont
 
 ## Returns
 
-`any`
+`add-list-contacts-response` — see the [`add-list-contacts-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 
 ```php
 $res = $mk->addListContacts([
     'id' => 'lst_1',
-    'contactIds' => ctr_1,ctr_2,
+    'contactIds' => ['ctr_1', 'ctr_2'],
 ]);
 ```
 

@@ -12,7 +12,7 @@ Delete a broadcast draft.
 
 ## Returns
 
-`any`
+`ok-response` — see the [`ok-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

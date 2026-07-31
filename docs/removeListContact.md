@@ -13,7 +13,7 @@ Remove one contact from a list (the contact itself is kept).
 
 ## Returns
 
-`any`
+`ok-response` — see the [`ok-response`](https://mailkite.dev/docs/api-reference) schema.
 
 ## Example
 

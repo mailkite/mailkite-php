@@ -21,7 +21,7 @@ Create a broadcast draft. `from` is required; set `audience` to { type: "all" } 
 
 ## Returns
 
-`any`
+`broadcast`
 
 ## Example
 
@@ -29,7 +29,7 @@ Create a broadcast draft. `from` is required; set `audience` to { type: "all" } 
 $res = $mk->createBroadcast([
     'from' => 'news@app.mailkite.dev',
     'subject' => 'Launch week',
-    'audience' => [object Object],
+    'audience' => ['type' => 'all'],
     'html' => '<h1>We shipped</h1>',
 ]);
 ```

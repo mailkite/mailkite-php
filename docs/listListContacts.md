@@ -14,7 +14,7 @@ List the contacts that are members of a list, newest first. Optionally page with
 
 ## Returns
 
-`any`
+`contact[]`
 
 ## Example
 

@@ -18,7 +18,12 @@ Encrypt a UTF-8 string to a domain's RSA public key (SPKI/PEM), returning the at
 ## Example
 
 ```php
-$res = $mk->encrypt({ … });
+$res = $mk->encrypt([
+    'plaintext' => 'Meet at noon.',
+    'publicKey' => '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0K1w0Qy4
+-----END PUBLIC KEY-----',
+]);
 ```
 
 ---

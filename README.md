@@ -65,13 +65,14 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | Method | What it does |
 | --- | --- |
 | [`send`](docs/send.md) | Send a message over a verified domain. Pass `templateId` (+ optional `templateData`) to… |
+| [`sendBatch`](docs/sendBatch.md) | Send one personalized message per recipient (up to 50) in a single call. Shared fields… |
 | [`uploadAttachment`](docs/uploadAttachment.md) | Upload a file to MailKite storage and get back a secure, time-limited URL. Reference the… |
 | [`listTemplates`](docs/listTemplates.md) | List your saved email templates (light metadata only — no body). Use getTemplate for the… |
 | [`listBaseTemplates`](docs/listBaseTemplates.md) | List the premade base templates (light metadata). Clone one with createTemplate({ baseId… |
 | [`getTemplate`](docs/getTemplate.md) | Get one template (full: subject, html, text, theme). Works for your templates (tpl_…) and… |
 | [`createTemplate`](docs/createTemplate.md) | Create a template. Pass `baseId` to clone a base template into your own, or provide… |
 | [`listDomains`](docs/listDomains.md) | List your domains, each with its webhook URL. |
-| [`createDomain`](docs/createDomain.md) | Add a domain. Returns the domain + DNS records. |
+| [`createDomain`](docs/createDomain.md) | Add a domain. Returns the domain + DNS records. Paid plans may pass `email_provider_id`… |
 | [`getDomain`](docs/getDomain.md) | Get one domain with DNS records + webhook. |
 | [`deleteDomain`](docs/deleteDomain.md) | Remove a domain. |
 | [`verifyDomain`](docs/verifyDomain.md) | Check DNS and update status. |

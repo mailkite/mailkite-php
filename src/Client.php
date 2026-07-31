@@ -97,6 +97,19 @@ class Client
     }
 
     /**
+     * Send one personalized message per recipient (up to 50) in a single
+     * call. Keys: from, recipients, plus shared subject/html/text/
+     * templateId/templateData/headers that form the base message. Each
+     * `recipients` entry gets its own message to exactly one address, with
+     * per-recipient `templateData` and `headers` merged over the shared
+     * ones. The response reports each recipient's outcome in order.
+     */
+    public function sendBatch($batch)
+    {
+        return $this->request('POST', '/v1/send/batch', $batch);
+    }
+
+    /**
      * Extension → MIME type map for guessing the Content-Type of a raw upload.
      */
     private const ATTACHMENT_MIME_TYPES = [
