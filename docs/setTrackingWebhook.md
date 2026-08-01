@@ -1,6 +1,6 @@
 # `setTrackingWebhook`
 
-Set or replace the domain's outbound tracking-event webhook: an HTTPS endpoint that receives signed email.* engagement events (email.sent / email.bounced / email.complained / email.opened / email.clicked, shaped per the tracking-event schema). A separate URL from the inbound-mail webhook, so inbound consumers never see event types they don't expect. Returns the signing secret (the same account secret as inbound deliveries).
+Set or replace the domain's dedicated tracking-event webhook: an HTTPS endpoint that receives signed email.* engagement events (email.sent / email.bounced / email.complained / email.opened / email.clicked, shaped per the tracking-event schema) SEPARATELY from inbound mail. This is the split-endpoint override for consumers that keep engagement events away from their inbound webhook (e.g. django-anymail's paired views); most consumers should prefer setWebhookEvents, which delivers everything to the one inbound webhook. When both are configured, this URL wins for engagement events. Returns the signing secret (the same account secret as inbound deliveries).
 
 **HTTP:** `PUT /api/domains/{id}/tracking-webhook`
 
