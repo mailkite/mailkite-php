@@ -375,6 +375,80 @@ class Client
         return $this->request('GET', '/v1/docs/search?query=' . rawurlencode($query));
     }
 
+    // --- Account ------------------------------------------------------------
+    /**
+     * Create a MailKite account from just an email — no password. Returns the
+     * new account's API key immediately; a verification link is emailed, and
+     * sending stays blocked until the address is verified (poll me()). An
+     * existing email returns 409 account_exists with no credentials. Keys:
+     * email (required), plus optional channel/ref/referrer.
+     */
+    public function register($body)
+    {
+        return $this->request('POST', '/api/v1/provision', $body);
+    }
+
+    /**
+     * The account behind this credential: email, whether it is verified
+     * (sending is blocked until it is), and plan. Use to poll verification
+     * state after register().
+     */
+    public function me()
+    {
+        return $this->request('GET', '/v1/me');
+    }
+
+    /** Get the account's unrestricted API key (mk_live_…). Read-or-create: the first call mints it. */
+    public function getApiKey()
+    {
+        return $this->request('GET', '/api/keys');
+    }
+
+    /**
+     * Rotate the account API key: the old key stops working immediately and a
+     * fresh one is returned. The plaintext is only shown here.
+     */
+    public function rotateApiKey()
+    {
+        return $this->request('POST', '/api/keys/rotate');
+    }
+
+    /**
+     * List the account's domain-scoped API keys. A scoped key can send and
+     * manage only its one domain — hand one to each site or CI job so a leak
+     * burns only that surface.
+     */
+    public function listScopedKeys()
+    {
+        return $this->request('GET', '/api/keys/scoped');
+    }
+
+    /**
+     * Create a key scoped to one domain. Ideal for per-site installs (e.g. a
+     * WordPress plugin) — the site never holds the account master key. Keys:
+     * domainId (required), name (optional).
+     */
+    public function createScopedKey($body)
+    {
+        return $this->request('POST', '/api/keys/scoped', $body);
+    }
+
+    /** Revoke a domain-scoped key. Takes effect immediately. */
+    public function deleteScopedKey(string $id)
+    {
+        return $this->request('DELETE', "/api/keys/scoped/$id");
+    }
+
+    /**
+     * Current billing-period usage: emails used vs the plan's included bucket
+     * (null = unlimited), AI actions, and the overage state that gates
+     * sending. Powers quota meters in dashboards and integrations.
+     */
+    public function getUsage()
+    {
+        return $this->request('GET', '/api/billing/usage');
+    }
+
     // --- Routes -----------------------------------------------------------
     public function listRoutes()
     {
@@ -465,6 +539,35 @@ class Client
     public function removeListContact(string $id, string $contactId)
     {
         return $this->request('DELETE', "/api/lists/$id/contacts/$contactId");
+    }
+
+    // --- Suppressions -------------------------------------------------------
+    /**
+     * List suppressed addresses (unsubscribes, hard bounces, spam
+     * complaints, manual). Sends to a suppressed address are dropped before
+     * delivery.
+     */
+    public function listSuppressions()
+    {
+        return $this->request('GET', '/api/contacts/suppressions');
+    }
+
+    /**
+     * Suppress an address so this account never sends to it again (reason
+     * defaults to manual). Keys: email (required), reason/note (optional).
+     */
+    public function addSuppression($body)
+    {
+        return $this->request('POST', '/api/contacts/suppressions', $body);
+    }
+
+    /**
+     * Remove an address from the suppression list. Removing an unsuppressed
+     * address is a no-op success.
+     */
+    public function removeSuppression(string $email)
+    {
+        return $this->request('DELETE', '/api/contacts/suppressions/' . rawurlencode($email));
     }
 
     // --- Broadcasts -------------------------------------------------------

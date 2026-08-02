@@ -70,6 +70,17 @@ function call(Client $mk, string $m, array $a)
         case 'replyBlockSender': return $mk->replyBlockSender();
         case 'decrypt': return $mk->decrypt($a['envelope'], $a['privateKey']);
         case 'encryptRoundtrip': return $mk->decrypt($mk->encrypt($a['plaintext'], $a['publicKey']), $a['privateKey']);
+        case 'register': return $mk->register($a);
+        case 'me': return $mk->me();
+        case 'getApiKey': return $mk->getApiKey();
+        case 'rotateApiKey': return $mk->rotateApiKey();
+        case 'listScopedKeys': return $mk->listScopedKeys();
+        case 'createScopedKey': return $mk->createScopedKey($a);
+        case 'deleteScopedKey': return $mk->deleteScopedKey($a['id']);
+        case 'getUsage': return $mk->getUsage();
+        case 'listSuppressions': return $mk->listSuppressions();
+        case 'addSuppression': return $mk->addSuppression($a);
+        case 'removeSuppression': return $mk->removeSuppression($a['email']);
     }
     throw new \RuntimeException("unknown method $m");
 }

@@ -116,6 +116,17 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`encrypt`](docs/encrypt.md) | Encrypt a UTF-8 string to a domain's RSA public key (SPKI/PEM), returning the at-rest… |
 | [`decrypt`](docs/decrypt.md) | Decrypt a MailKite at-rest envelope JSON with your RSA private key (PKCS8/PEM), returning… |
 | [`semanticSearch`](docs/semanticSearch.md) | Semantic search over the MailKite documentation — returns the most relevant doc sections… |
+| [`getApiKey`](docs/getApiKey.md) | Get the account's unrestricted API key (mk_live_…). Read-or-create: the first call mints… |
+| [`rotateApiKey`](docs/rotateApiKey.md) | Rotate the account API key: the old key stops working immediately and a fresh one is… |
+| [`listScopedKeys`](docs/listScopedKeys.md) | List the account's domain-scoped API keys. A scoped key can send and manage only its one… |
+| [`createScopedKey`](docs/createScopedKey.md) | Create a key scoped to one domain. Ideal for per-site installs (e.g. a WordPress plugin)… |
+| [`deleteScopedKey`](docs/deleteScopedKey.md) | Revoke a domain-scoped key. Takes effect immediately. |
+| [`getUsage`](docs/getUsage.md) | Current billing-period usage: emails used vs the plan's included bucket (null =… |
+| [`listSuppressions`](docs/listSuppressions.md) | List suppressed addresses (unsubscribes, hard bounces, spam complaints, manual). Sends to… |
+| [`addSuppression`](docs/addSuppression.md) | Suppress an address so this account never sends to it again (reason defaults to manual). |
+| [`removeSuppression`](docs/removeSuppression.md) | Remove an address from the suppression list (URL-encode the email in the path). Removing… |
+| [`register`](docs/register.md) | Create a MailKite account from just an email — no password. Returns the new account's API… |
+| [`me`](docs/me.md) | The account behind this credential: email, whether it is verified (sending is blocked… |
 
 ## Use it from an AI agent — MCP + Agent connectors
 
