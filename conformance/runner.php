@@ -77,6 +77,9 @@ function call(Client $mk, string $m, array $a)
         case 'listScopedKeys': return $mk->listScopedKeys();
         case 'createScopedKey': return $mk->createScopedKey($a);
         case 'deleteScopedKey': return $mk->deleteScopedKey($a['id']);
+        case 'listAppPasswords': return $mk->listAppPasswords();
+        case 'createAppPassword': return $mk->createAppPassword($a);
+        case 'deleteAppPassword': return $mk->deleteAppPassword($a['id']);
         case 'getUsage': return $mk->getUsage();
         case 'listSuppressions': return $mk->listSuppressions();
         case 'addSuppression': return $mk->addSuppression($a);
