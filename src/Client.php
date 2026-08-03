@@ -440,6 +440,61 @@ class Client
     }
 
     /**
+     * List the account's app passwords. Each one opens a mailbox over IMAP and/or the mailbox
+     * API, scoped to a domain and an address pattern within it.
+     */
+    public function listAppPasswords()
+    {
+        return $this->request('GET', '/api/app-passwords');
+    }
+
+    /**
+     * Create an app password for one domain and address pattern. $body carries "domain"
+     * (required) plus optional "address" (default "*"), "protocols" (default ["imap"]) and
+     * "label". The secret is returned once and never again.
+     */
+    public function createAppPassword(array $body)
+    {
+        return $this->request('POST', '/api/app-passwords', $body);
+    }
+
+    /**
+     * Revoke an app password. Takes effect immediately — any IMAP session or API call using it
+     * stops authenticating.
+     */
+    public function deleteAppPassword(string $id)
+    {
+        return $this->request('DELETE', "/api/app-passwords/$id");
+    }
+
+    /**
+     * List a mailbox's messages, newest first. Authenticated with an app password granting
+     * "api" — this is how an agent reads its own inbox without an IMAP client.
+     */
+    public function listMailboxMessages(string $address, array $params = [])
+    {
+        $q = http_build_query(array_merge(['address' => $address], $params));
+        return $this->request('GET', "/api/mailbox/messages?$q");
+    }
+
+    /** Fetch one message's raw RFC822 bytes from a mailbox. Same app password auth as the list. */
+    public function getMailboxMessageRaw(int $uid, string $address)
+    {
+        $q = http_build_query(['address' => $address]);
+        return $this->request('GET', "/api/mailbox/messages/$uid/raw?$q");
+    }
+
+    /**
+     * Replace a message's IMAP flags (e.g. mark it "Seen"). Flags set here are the same ones an
+     * IMAP client sees.
+     */
+    public function setMailboxMessageFlags(int $uid, string $address, string $flags)
+    {
+        $q = http_build_query(['address' => $address]);
+        return $this->request('POST', "/api/mailbox/messages/$uid/flags?$q", ['flags' => $flags]);
+    }
+
+    /**
      * Current billing-period usage: emails used vs the plan's included bucket
      * (null = unlimited), AI actions, and the overage state that gates
      * sending. Powers quota meters in dashboards and integrations.
