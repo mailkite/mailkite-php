@@ -304,6 +304,35 @@ class Client
         return $this->request('POST', '/api/domains', $body);
     }
 
+    /**
+     * Suggest a free, currently-unclaimed subdomain label to prefill the input with.
+     * Read-only — suggesting does not reserve the name. Read `base` from the response
+     * rather than hard-coding the pool zone.
+     */
+    public function suggestSubdomain()
+    {
+        return $this->request('GET', '/api/domains/subdomain/suggest');
+    }
+
+    /**
+     * Check whether a free subdomain label can be claimed. Cheap enough to call as the
+     * user types; `reason` explains a rejection and is safe to show verbatim.
+     */
+    public function checkSubdomain(string $name)
+    {
+        return $this->request('GET', '/api/domains/subdomain/check?name=' . rawurlencode($name));
+    }
+
+    /**
+     * Claim a free managed subdomain (`<label>.<base>`). Comes back already verified
+     * with an empty `dns` array — we host the zone, so there is nothing for the customer
+     * to publish.
+     */
+    public function claimSubdomain($body)
+    {
+        return $this->request('POST', '/api/domains/subdomain', $body);
+    }
+
     public function getDomain(string $id)
     {
         return $this->request('GET', "/api/domains/$id");
@@ -396,6 +425,26 @@ class Client
     public function me()
     {
         return $this->request('GET', '/v1/me');
+    }
+
+    /**
+     * Step 1 of linking an EXISTING account: register an OAuth client for this
+     * installation (RFC 7591). No pre-shared secret — the client is public and proves
+     * itself with PKCE. Public: no API key required.
+     */
+    public function registerOauthClient($body)
+    {
+        return $this->request('POST', '/oauth/register', $body);
+    }
+
+    /**
+     * Step 3 of linking: exchange the authorization code for an access token, or rotate
+     * a refresh token. Finish by calling getApiKey() with the access token and storing
+     * the key. Public: no API key required.
+     */
+    public function exchangeOauthToken($body)
+    {
+        return $this->request('POST', '/oauth/token', $body);
     }
 
     /** Get the account's unrestricted API key (mk_live_…). Read-or-create: the first call mints it. */
