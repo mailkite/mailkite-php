@@ -97,6 +97,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally filter with `search` (matches sender… |
 | [`getMessage`](docs/getMessage.md) | Get a message with deliveries + attachments. |
 | [`retryDelivery`](docs/retryDelivery.md) | Re-deliver a stored message to its webhook. |
+| [`createRealtimeToken`](docs/createRealtimeToken.md) | Mint a short-lived, single-use token that authorises one Realtime API connection. For… |
 | [`listLists`](docs/listLists.md) | List your contact lists (static, curated broadcast audiences), each with its member count. |
 | [`createList`](docs/createList.md) | Create a contact list. Returns the list with its id (lst_…); add contacts with… |
 | [`getList`](docs/getList.md) | Get one contact list with its member count. |
@@ -128,6 +129,8 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`deleteScopedKey`](docs/deleteScopedKey.md) | Revoke a domain-scoped key. Takes effect immediately. |
 | [`listAppPasswords`](docs/listAppPasswords.md) | List the account's app passwords. Each one opens a mailbox over IMAP and/or the mailbox… |
 | [`createAppPassword`](docs/createAppPassword.md) | Create an app password for one domain and address pattern. Hand it to a mail client or an… |
+| [`updateAppPassword`](docs/updateAppPassword.md) | Change what an app password covers — its label, address pattern, or protocols. The domain… |
+| [`rotateAppPassword`](docs/rotateAppPassword.md) | Replace an app password's secret, keeping its scope. The old secret stops authenticating… |
 | [`deleteAppPassword`](docs/deleteAppPassword.md) | Revoke an app password. Takes effect immediately — any IMAP session or API call using it… |
 | [`listMailboxMessages`](docs/listMailboxMessages.md) | List a mailbox's messages, newest first. Authenticated with an app password granting… |
 | [`getMailboxMessageRaw`](docs/getMailboxMessageRaw.md) | Fetch one message's raw RFC822 bytes from a mailbox. Same app password auth as the list. |
