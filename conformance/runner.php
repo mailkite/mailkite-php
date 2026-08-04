@@ -41,6 +41,11 @@ function call(Client $mk, string $m, array $a)
         case 'deleteWebhookEvents': return $mk->deleteWebhookEvents($a['id']);
         case 'testWebhook': return $mk->testWebhook($a['id']);
         case 'checkDomainAvailability': return $mk->checkDomainAvailability($a['domain']);
+        case 'suggestSubdomain': return $mk->suggestSubdomain();
+        case 'checkSubdomain': return $mk->checkSubdomain($a['name']);
+        case 'claimSubdomain': return $mk->claimSubdomain($a);
+        case 'registerOauthClient': return $mk->registerOauthClient($a);
+        case 'exchangeOauthToken': return $mk->exchangeOauthToken($a);
         case 'semanticSearch': return $mk->semanticSearch($a['query']);
         case 'registerDomain': return $mk->registerDomain($a);
         case 'listRoutes': return $mk->listRoutes();
