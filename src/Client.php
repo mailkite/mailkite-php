@@ -508,6 +508,25 @@ class Client
     }
 
     /**
+     * Edit an app password's label, address pattern and protocols. The domain is fixed for the
+     * life of the password: repointing a live credential would hand its holder mail they were
+     * never granted.
+     */
+    public function updateAppPassword(string $id, $body)
+    {
+        return $this->request('PATCH', "/api/app-passwords/$id", $body);
+    }
+
+    /**
+     * Replace an app password's secret, keeping its scope. The old secret stops authenticating
+     * immediately; the new one is returned once.
+     */
+    public function rotateAppPassword(string $id)
+    {
+        return $this->request('POST', "/api/app-passwords/$id/rotate");
+    }
+
+    /**
      * Revoke an app password. Takes effect immediately — any IMAP session or API call using it
      * stops authenticating.
      */
@@ -594,6 +613,18 @@ class Client
     public function retryDelivery(string $id)
     {
         return $this->request('POST', "/api/deliveries/$id/retry");
+    }
+
+    // --- Realtime ---------------------------------------------------------
+    /**
+     * Mint a short-lived, single-use token that authorises one Realtime API connection.
+     * Browsers need this because EventSource cannot set headers; the page passes it as
+     * ?token= on GET /v1/realtime. Inherits this credential's scope, expires in five
+     * minutes, and burns on first use.
+     */
+    public function createRealtimeToken()
+    {
+        return $this->request('POST', '/v1/realtime/token');
     }
 
     // --- Contact lists ----------------------------------------------------

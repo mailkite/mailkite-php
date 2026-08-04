@@ -79,11 +79,15 @@ function call(Client $mk, string $m, array $a)
         case 'me': return $mk->me();
         case 'getApiKey': return $mk->getApiKey();
         case 'rotateApiKey': return $mk->rotateApiKey();
+        case 'createRealtimeToken': return $mk->createRealtimeToken();
         case 'listScopedKeys': return $mk->listScopedKeys();
         case 'createScopedKey': return $mk->createScopedKey($a);
         case 'deleteScopedKey': return $mk->deleteScopedKey($a['id']);
         case 'listAppPasswords': return $mk->listAppPasswords();
         case 'createAppPassword': return $mk->createAppPassword($a);
+        // The body schema forbids 'id' (it lives in the path).
+        case 'updateAppPassword': return $mk->updateAppPassword($a['id'], array_diff_key($a, ['id' => true]));
+        case 'rotateAppPassword': return $mk->rotateAppPassword($a['id']);
         case 'deleteAppPassword': return $mk->deleteAppPassword($a['id']);
         case 'getUsage': return $mk->getUsage();
         case 'listSuppressions': return $mk->listSuppressions();
