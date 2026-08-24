@@ -66,6 +66,8 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | --- | --- |
 | [`send`](docs/send.md) | Send a message over a verified domain. Pass `templateId` (+ optional `templateData`) to… |
 | [`sendBatch`](docs/sendBatch.md) | Send one personalized message per recipient (up to 50) in a single call. Shared fields… |
+| [`sendEvent`](docs/sendEvent.md) | Record one application-level fact about a user — `user.created`, `trial.expiring`… |
+| [`listEvents`](docs/listEvents.md) | List recorded events, newest first — the surface for confirming a POST landed and for… |
 | [`uploadAttachment`](docs/uploadAttachment.md) | Upload a file to MailKite storage and get back a secure, time-limited URL. Reference the… |
 | [`listTemplates`](docs/listTemplates.md) | List your saved email templates (light metadata only — no body). Use getTemplate for the… |
 | [`listBaseTemplates`](docs/listBaseTemplates.md) | List the premade base templates (light metadata). Clone one with createTemplate({ baseId… |
