@@ -68,6 +68,16 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`sendBatch`](docs/sendBatch.md) | Send one personalized message per recipient (up to 50) in a single call. Shared fields… |
 | [`sendEvent`](docs/sendEvent.md) | Record one application-level fact about a user — `user.created`, `trial.expiring`… |
 | [`listEvents`](docs/listEvents.md) | List recorded events, newest first — the surface for confirming a POST landed and for… |
+| [`listSequences`](docs/listSequences.md) | List your sequences, newest first, each with live enrollment counts. Archived sequences… |
+| [`createSequence`](docs/createSequence.md) | Create a sequence: a trigger plus the steps a contact walks over time. Created as a draft… |
+| [`getSequence`](docs/getSequence.md) | Get one sequence with its definition and live enrollment counts. |
+| [`updateSequence`](docs/updateSequence.md) | Edit a sequence. Changing the trigger or steps bumps its version; contacts already in… |
+| [`deleteSequence`](docs/deleteSequence.md) | Delete a sequence and retire every contact still walking it. The response reports how… |
+| [`enrollContact`](docs/enrollContact.md) | Put one contact into an active sequence by hand. Refused with 409 when the address is… |
+| [`listEnrollments`](docs/listEnrollments.md) | List who is in a sequence and where each of them is. Filter with `status`. |
+| [`getEnrollment`](docs/getEnrollment.md) | Get one enrollment — which sequence, which step, and what happens next. |
+| [`listEnrollmentRuns`](docs/listEnrollmentRuns.md) | Every step this enrollment has executed, with the outcome and the reason for it. This is… |
+| [`cancelEnrollment`](docs/cancelEnrollment.md) | Stop a contact partway through a sequence. Answers 409 when the enrollment has already… |
 | [`uploadAttachment`](docs/uploadAttachment.md) | Upload a file to MailKite storage and get back a secure, time-limited URL. Reference the… |
 | [`listTemplates`](docs/listTemplates.md) | List your saved email templates (light metadata only — no body). Use getTemplate for the… |
 | [`listBaseTemplates`](docs/listBaseTemplates.md) | List the premade base templates (light metadata). Clone one with createTemplate({ baseId… |
