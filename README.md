@@ -68,6 +68,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`sendBatch`](docs/sendBatch.md) | Send one personalized message per recipient (up to 50) in a single call. Shared fields… |
 | [`sendEvent`](docs/sendEvent.md) | Record one application-level fact about a user — `user.created`, `trial.expiring`… |
 | [`listEvents`](docs/listEvents.md) | List recorded events, newest first — the surface for confirming a POST landed and for… |
+| [`listEventNames`](docs/listEventNames.md) | List the distinct event names this account works with, so an editor can offer them… |
 | [`listSequences`](docs/listSequences.md) | List your sequences, newest first, each with live enrollment counts. Archived sequences… |
 | [`createSequence`](docs/createSequence.md) | Create a sequence: a trigger plus the steps a contact walks over time. Created as a draft… |
 | [`getSequence`](docs/getSequence.md) | Get one sequence with its definition and live enrollment counts. |
