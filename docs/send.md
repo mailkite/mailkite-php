@@ -22,6 +22,7 @@ Send a message over a verified domain. Pass `templateId` (+ optional `templateDa
 | `headers` | object |  | Extra raw MIME headers, applied after threading headers (caller wins). Use for what the… |
 | `metadata` | object |  | Structured metadata kept SERVER-SIDE for this send: stored on the message and echoed back… |
 | `sequence` | string |  | Enroll this recipient in a sequence when the send succeeds — the name or id of an ACTIVE… |
+| `sequenceInput` | object |  | Explicit input for the sequence named in `sequence`, checked against its declared… |
 | `attachments` | array |  |  |
 | `scheduledAt` | string,number |  | Send later: ISO 8601, simple relative natural language ("in 2 hours"), or a ms-epoch. A… |
 | `trackOpens` | boolean |  | Open-tracking override for this send (HTML only). Omitted → the from-domain's default… |

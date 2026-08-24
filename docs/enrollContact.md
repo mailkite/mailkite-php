@@ -1,6 +1,6 @@
 # `enrollContact`
 
-Put one contact into an active sequence by hand. Refused with 409 when the address is suppressed, or already in flight on a `reentry: "once"` sequence. Pass `cancelKey` to be able to cancel later using your own identifier.
+Put one contact into an active sequence by hand, with the input its signature declares. Refused with 409 when the address is suppressed, already in flight on a `reentry: "once"` sequence, or missing a required input — and the response says which. Pass `cancelKey` to be able to cancel later using your own identifier.
 
 **HTTP:** `POST /v1/sequences/{id}/enroll`
 
@@ -11,7 +11,8 @@ Put one contact into an active sequence by hand. Refused with 409 when the addre
 | `email` | string |  | The address to enroll. Give this or `contactId`. |
 | `contactId` | string |  | A contact you own (ctc_…), as an alternative to `email`. |
 | `from` | string |  | Sender for this enrollment, when the sequence has no default (a send-triggered sequence… |
-| `data` | object |  | Context carried with the enrollment and readable in merge tags as {{event.*}}. |
+| `input` | object |  | The sequence's input, checked against its declared signature. A missing required field… |
+| `data` | object |  | The original name for `input`. Still accepted; `input` wins when both are given. |
 | `cancelKey` | string |  | Your own key for this enrollment. Cancel later with POST /v1/enrollments/cancel and this… |
 
 ## Returns
@@ -24,6 +25,7 @@ Put one contact into an active sequence by hand. Refused with 409 when the addre
 $res = $mk->enrollContact([
     'id' => 'seq_3c8f21aa',
     'email' => 'ada@example.com',
+    'input' => ['invoiceId' => 'inv_1042'],
     'cancelKey' => 'invoice_9f2c',
 ]);
 ```

@@ -70,11 +70,15 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`listEvents`](docs/listEvents.md) | List recorded events, newest first — the surface for confirming a POST landed and for… |
 | [`listEventNames`](docs/listEventNames.md) | List the distinct event names this account works with, so an editor can offer them… |
 | [`listSequences`](docs/listSequences.md) | List your sequences, newest first, each with live enrollment counts. Archived sequences… |
-| [`createSequence`](docs/createSequence.md) | Create a sequence: a trigger plus the steps a contact walks over time. Created as a draft… |
+| [`createSequence`](docs/createSequence.md) | Create a sequence: a declared input shape, the steps a contact walks over time, and zero… |
 | [`getSequence`](docs/getSequence.md) | Get one sequence with its definition and live enrollment counts. |
-| [`updateSequence`](docs/updateSequence.md) | Edit a sequence. Changing the trigger or steps bumps its version; contacts already in… |
+| [`updateSequence`](docs/updateSequence.md) | Edit a sequence. Changing the STEPS bumps its version and contacts already in flight keep… |
 | [`deleteSequence`](docs/deleteSequence.md) | Delete a sequence and retire every contact still walking it. The response reports how… |
-| [`enrollContact`](docs/enrollContact.md) | Put one contact into an active sequence by hand. Refused with 409 when the address is… |
+| [`listTriggers`](docs/listTriggers.md) | List the triggers attached to a sequence — the doors into it. |
+| [`createTrigger`](docs/createTrigger.md) | Attach a trigger: when this event arrives, enroll the contact it is about. Attaching… |
+| [`updateTrigger`](docs/updateTrigger.md) | Edit a trigger, or toggle `enabled` to switch the door off without deleting it. Either… |
+| [`deleteTrigger`](docs/deleteTrigger.md) | Detach a trigger. Stops future enrollments through that door and nothing else. |
+| [`enrollContact`](docs/enrollContact.md) | Put one contact into an active sequence by hand, with the input its signature declares… |
 | [`listEnrollments`](docs/listEnrollments.md) | List who is in a sequence and where each of them is. Filter with `status`. |
 | [`getEnrollment`](docs/getEnrollment.md) | Get one enrollment — which sequence, which step, and what happens next. |
 | [`listEnrollmentRuns`](docs/listEnrollmentRuns.md) | Every step this enrollment has executed, with the outcome and the reason for it. This is… |

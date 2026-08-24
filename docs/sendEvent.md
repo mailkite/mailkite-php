@@ -1,6 +1,6 @@
 # `sendEvent`
 
-Record one application-level fact about a user — `user.created`, `trial.expiring`, `payment.failed` — as the trigger for a sequence. Identify the subject with `email` or `contactId` (never both) and carry context in `payload`, which steps read as {{event.*}}. Pass a `dedupeKey` to make retries idempotent: a repeat returns the original event with `duplicate: true` rather than enrolling anyone twice. Distinct from the delivery timeline, which records what MailKite did with a message; this records what your user did.
+Record one application-level fact about a user — `user.created`, `trial.expiring`, `payment.failed`. THE primary way a sequence starts on a developer platform: your application already knows when a payment failed, so it says so, and every enabled trigger listening for that name enrolls the contact with the payload as its input. Identify the subject with `email` or `contactId` (never both). Pass a `dedupeKey` to make retries idempotent: a repeat returns the original event with `duplicate: true` rather than enrolling anyone twice.
 
 **HTTP:** `POST /v1/events`
 

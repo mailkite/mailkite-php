@@ -1,6 +1,6 @@
 # `createSequence`
 
-Create a sequence: a trigger plus the steps a contact walks over time. Created as a draft unless you pass status "active" — a sequence enrolls nobody until it is active. The whole definition is validated up front and every problem is reported at once, so you fix a program in one pass rather than one 400 at a time.
+Create a sequence: a declared input shape, the steps a contact walks over time, and zero or more triggers. A sequence is a function — `input` is its signature, and every door must satisfy it, so a step's {{input.field}} means the same thing however it was started. Created as a draft unless you pass status "active". The whole definition is validated up front and every problem is reported at once, so you fix a program in one pass rather than one 400 at a time.
 
 **HTTP:** `POST /v1/sequences`
 
@@ -11,7 +11,8 @@ Create a sequence: a trigger plus the steps a contact walks over time. Created a
 | `name` | string | ✓ | Unique handle for this account; 1-64 chars of letters, digits, dot, dash, or underscore… |
 | `status` | string |  | Defaults to `draft`. A sequence enrolls nobody until it is `active`. |
 | `from` | string |  | Default sender for every send step, on a verified domain. Required unless every send step… |
-| `trigger` | any | ✓ |  |
+| `input` | object,null |  | The sequence's input signature: the shape every door must supply. A sequence is a… |
+| `triggers` | array |  | Doors into this sequence. A bare string is shorthand for { "event": "<name>" }. Replacing… |
 | `steps` | array | ✓ | At least one step, and at least one of them a `send` — a sequence that never sends is a… |
 | `reentry` | string |  | `once` (default) refuses to enroll a contact already in flight. `always` restarts them… |
 | `exitOn` | object,null |  | Sequence-level exits, evaluated before EVERY step. `goal` completes the enrollment — they… |
@@ -27,8 +28,9 @@ $res = $mk->createSequence([
     'name' => 'dunning',
     'status' => 'active',
     'from' => 'billing@acme.dev',
-    'trigger' => ['type' => 'send'],
-    'steps' => [['type' => 'delay', 'for' => '3 days'], ['type' => 'send', 'templateId' => 'tpl_8Rt5NmZx', 'subject' => 'Your invoice is still unpaid']],
+    'input' => ['invoiceId' => ['type' => 'string', 'required' => true]],
+    'triggers' => ['payment.failed', 'invoice.overdue'],
+    'steps' => [['type' => 'delay', 'for' => '3 days'], ['type' => 'send', 'templateId' => 'tpl_8Rt5NmZx', 'subject' => 'Invoice {{input.invoiceId}} is still unpaid']],
 ]);
 ```
 
