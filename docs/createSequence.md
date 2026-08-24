@@ -13,7 +13,8 @@ Create a sequence: a trigger plus the steps a contact walks over time. Created a
 | `from` | string |  | Default sender for every send step, on a verified domain. Required unless every send step… |
 | `trigger` | any | ✓ |  |
 | `steps` | array | ✓ | At least one step, and at least one of them a `send` — a sequence that never sends is a… |
-| `reentry` | string |  | Defaults to `once`. |
+| `reentry` | string |  | `once` (default) refuses to enroll a contact already in flight. `always` restarts them… |
+| `exitOn` | object,null |  | Sequence-level exits, evaluated before EVERY step. `goal` completes the enrollment — they… |
 
 ## Returns
 

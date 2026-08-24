@@ -13,7 +13,8 @@ Edit a sequence. Changing the trigger or steps bumps its version; contacts alrea
 | `from` | string |  |  |
 | `trigger` | any |  |  |
 | `steps` | array |  |  |
-| `reentry` | string |  |  |
+| `reentry` | string |  | `once` (default) refuses to enroll a contact already in flight. `always` restarts them… |
+| `exitOn` | object,null |  | Sequence-level exits, evaluated before EVERY step. `goal` completes the enrollment — they… |
 
 ## Returns
 

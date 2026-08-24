@@ -78,6 +78,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`getEnrollment`](docs/getEnrollment.md) | Get one enrollment — which sequence, which step, and what happens next. |
 | [`listEnrollmentRuns`](docs/listEnrollmentRuns.md) | Every step this enrollment has executed, with the outcome and the reason for it. This is… |
 | [`cancelEnrollment`](docs/cancelEnrollment.md) | Stop a contact partway through a sequence. Answers 409 when the enrollment has already… |
+| [`cancelEnrollmentsByKey`](docs/cancelEnrollmentsByKey.md) | Stop every in-flight enrollment carrying a `cancelKey` you set when enrolling — so you… |
 | [`uploadAttachment`](docs/uploadAttachment.md) | Upload a file to MailKite storage and get back a secure, time-limited URL. Reference the… |
 | [`listTemplates`](docs/listTemplates.md) | List your saved email templates (light metadata only — no body). Use getTemplate for the… |
 | [`listBaseTemplates`](docs/listBaseTemplates.md) | List the premade base templates (light metadata). Clone one with createTemplate({ baseId… |
