@@ -1,6 +1,6 @@
 # `cancelEnrollment`
 
-Stop a contact partway through a sequence. Answers 409 when the enrollment has already finished or been canceled.
+Cancel one specific run by its enrollment id — the per-row action when you are looking at the enrollments table. To stop whatever is chasing a contact without knowing which run, use stopSequence.
 
 **HTTP:** `DELETE /v1/enrollments/{id}`
 

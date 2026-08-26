@@ -78,12 +78,12 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`createTrigger`](docs/createTrigger.md) | Attach a trigger: when this event arrives, enroll the contact it is about. Attaching… |
 | [`updateTrigger`](docs/updateTrigger.md) | Edit a trigger, or toggle `enabled` to switch the door off without deleting it. Either… |
 | [`deleteTrigger`](docs/deleteTrigger.md) | Detach a trigger. Stops future enrollments through that door and nothing else. |
-| [`enrollContact`](docs/enrollContact.md) | Put one contact into an active sequence by hand, with the input its signature declares… |
+| [`startSequence`](docs/startSequence.md) | Start a sequence for one contact, directly — when your code already knows WHICH sequence… |
+| [`stopSequence`](docs/stopSequence.md) | Stop whatever is chasing someone. Pass the `cancelKey` you set when starting — so you… |
 | [`listEnrollments`](docs/listEnrollments.md) | List who is in a sequence and where each of them is. Filter with `status`. |
 | [`getEnrollment`](docs/getEnrollment.md) | Get one enrollment — which sequence, which step, and what happens next. |
 | [`listEnrollmentRuns`](docs/listEnrollmentRuns.md) | Every step this enrollment has executed, with the outcome and the reason for it. This is… |
-| [`cancelEnrollment`](docs/cancelEnrollment.md) | Stop a contact partway through a sequence. Answers 409 when the enrollment has already… |
-| [`cancelEnrollmentsByKey`](docs/cancelEnrollmentsByKey.md) | Stop every in-flight enrollment carrying a `cancelKey` you set when enrolling — so you… |
+| [`cancelEnrollment`](docs/cancelEnrollment.md) | Cancel one specific run by its enrollment id — the per-row action when you are looking at… |
 | [`uploadAttachment`](docs/uploadAttachment.md) | Upload a file to MailKite storage and get back a secure, time-limited URL. Reference the… |
 | [`listTemplates`](docs/listTemplates.md) | List your saved email templates (light metadata only — no body). Use getTemplate for the… |
 | [`listBaseTemplates`](docs/listBaseTemplates.md) | List the premade base templates (light metadata). Clone one with createTemplate({ baseId… |
