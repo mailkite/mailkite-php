@@ -615,6 +615,48 @@ class Client
         return $this->request('POST', "/api/deliveries/$id/retry");
     }
 
+    /**
+     * Replay a whole selection of webhook deliveries in one call. $body takes deliveryIds /
+     * messageIds / threadIds (they combine), at most 50 ids per request. Always answers 200 with
+     * a per-id `results` array, so branch on that rather than on the status.
+     */
+    public function retryDeliveries(array $body)
+    {
+        return $this->request('POST', '/api/deliveries/retry', $body);
+    }
+
+    /**
+     * Every captured attempt for one delivery, newest first — the request we sent and the
+     * response that came back. Captures are retained for 45 days.
+     */
+    public function listDeliveryAttempts(string $id)
+    {
+        return $this->request('GET', "/api/deliveries/$id/attempts");
+    }
+
+    /**
+     * POST stored messages to one webhook route, including mail that arrived before the route
+     * existed. $body is ['messageIds' => [...]], at most 50. Webhook routes only.
+     */
+    public function deliverToRoute(string $id, array $body)
+    {
+        return $this->request('POST', "/api/routes/$id/deliver", $body);
+    }
+
+    /** Stored messages this route could be asked to deliver, newest first. */
+    public function listRouteCandidates(string $id, ?int $before = null, ?int $limit = null)
+    {
+        $query = [];
+        if ($before !== null) {
+            $query[] = 'before=' . rawurlencode((string) $before);
+        }
+        if ($limit !== null) {
+            $query[] = 'limit=' . rawurlencode((string) $limit);
+        }
+        $path = "/api/routes/$id/candidates" . (count($query) > 0 ? '?' . implode('&', $query) : '');
+        return $this->request('GET', $path);
+    }
+
     // --- Realtime ---------------------------------------------------------
     /**
      * Mint a short-lived, single-use token that authorises one Realtime API connection.

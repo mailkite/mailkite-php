@@ -68,6 +68,10 @@ function call(Client $mk, string $m, array $a)
         case 'listMessages': return $mk->listMessages(isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null, isset($a['search']) ? (string) $a['search'] : null);
         case 'getMessage': return $mk->getMessage($a['id']);
         case 'retryDelivery': return $mk->retryDelivery($a['id']);
+        case 'retryDeliveries': return $mk->retryDeliveries($a);
+        case 'listDeliveryAttempts': return $mk->listDeliveryAttempts($a['id']);
+        case 'deliverToRoute': return $mk->deliverToRoute($a['id'], ['messageIds' => $a['messageIds']]);
+        case 'listRouteCandidates': return $mk->listRouteCandidates($a['id'], isset($a['before']) ? (int) $a['before'] : null, isset($a['limit']) ? (int) $a['limit'] : null);
         case 'verifyWebhook': return $mk->verifyWebhook($a['signature'], $a['payload'], $a['secret'], (int) $a['toleranceMs']);
         case 'replyOk': return $mk->replyOk();
         case 'replySpam': return $mk->replySpam();

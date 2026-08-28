@@ -115,6 +115,10 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally filter with `search` (matches sender… |
 | [`getMessage`](docs/getMessage.md) | Get a message with deliveries + attachments. |
 | [`retryDelivery`](docs/retryDelivery.md) | Re-deliver a stored message to its webhook. |
+| [`retryDeliveries`](docs/retryDeliveries.md) | Replay a whole selection of webhook deliveries in one call — the bulk form of… |
+| [`listDeliveryAttempts`](docs/listDeliveryAttempts.md) | Every captured attempt for one delivery, newest first: the request headers and payload we… |
+| [`deliverToRoute`](docs/deliverToRoute.md) | POST stored messages to one webhook route — including messages that arrived BEFORE the… |
+| [`listRouteCandidates`](docs/listRouteCandidates.md) | Stored inbound messages this route could be asked to deliver, newest first — the preview… |
 | [`createRealtimeToken`](docs/createRealtimeToken.md) | Mint a short-lived, single-use token that authorises one Realtime API connection. For… |
 | [`listLists`](docs/listLists.md) | List your contact lists (static, curated broadcast audiences), each with its member count. |
 | [`createList`](docs/createList.md) | Create a contact list. Returns the list with its id (lst_…); add contacts with… |
