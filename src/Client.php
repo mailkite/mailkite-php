@@ -724,6 +724,158 @@ class Client
      * complaints, manual). Sends to a suppressed address are dropped before
      * delivery.
      */
+    // --- Events -------------------------------------------------------------
+
+    /**
+     * Record one application-level fact about a user — `user.created`, `trial.expiring`,
+     * `payment.failed`. Every enabled trigger listening for that name enrolls the contact with
+     * the payload as its input. Identify the subject with `email` or `contactId`, never both;
+     * pass a `dedupeKey` to make retries idempotent.
+     */
+    public function sendEvent($event)
+    {
+        return $this->request('POST', '/v1/events', $event);
+    }
+
+    /** List recorded events, newest first. Filter by event `name` and/or `email`. */
+    public function listEvents(?string $name = null, ?string $email = null)
+    {
+        $query = [];
+        if ($name !== null) {
+            $query[] = 'name=' . rawurlencode($name);
+        }
+        if ($email !== null) {
+            $query[] = 'email=' . rawurlencode($email);
+        }
+        $path = '/v1/events' . (count($query) > 0 ? '?' . implode('&', $query) : '');
+        return $this->request('GET', $path);
+    }
+
+    /**
+     * The distinct event names this account works with — both events actually posted and ones
+     * your sequences trigger on or wait for but that may never have been sent.
+     */
+    public function listEventNames()
+    {
+        return $this->request('GET', '/v1/events/names');
+    }
+
+    // --- Sequences ----------------------------------------------------------
+
+    /** List your sequences, newest first, each with live enrollment counts. Archived ones omitted. */
+    public function listSequences()
+    {
+        return $this->request('GET', '/v1/sequences');
+    }
+
+    /**
+     * Create a sequence: a declared input shape, the steps a contact walks over time, and zero
+     * or more triggers. Created as a draft unless you pass status "active".
+     */
+    public function createSequence($sequence)
+    {
+        return $this->request('POST', '/v1/sequences', $sequence);
+    }
+
+    /** Get one sequence with its definition and live enrollment counts. */
+    public function getSequence(string $id)
+    {
+        return $this->request('GET', "/v1/sequences/$id");
+    }
+
+    /**
+     * Edit a sequence. Changing the STEPS bumps its version and contacts already in flight keep
+     * walking the version they started on, so an edit can never make someone skip or repeat a step.
+     */
+    public function updateSequence(string $id, $sequence)
+    {
+        return $this->request('PATCH', "/v1/sequences/$id", $sequence);
+    }
+
+    /** Delete a sequence and retire every contact still walking it. */
+    public function deleteSequence(string $id)
+    {
+        return $this->request('DELETE', "/v1/sequences/$id");
+    }
+
+    /**
+     * Start a sequence for one contact directly — takes a sequence NAME or id. Returns the
+     * enrollment it created. Reach for sendEvent() instead when your code only knows what
+     * HAPPENED and policy should decide what reacts.
+     */
+    public function startSequence(string $sequence, $body = null)
+    {
+        return $this->request('POST', "/v1/sequences/$sequence/start", $body);
+    }
+
+    /**
+     * Stop whatever is chasing someone — pass the `cancelKey` you set when starting, or
+     * `sequence` and `email` together. Always answers 200 with a count.
+     */
+    public function stopSequence($body)
+    {
+        return $this->request('POST', '/v1/sequences/stop', $body);
+    }
+
+    // --- Triggers -----------------------------------------------------------
+
+    /** List the triggers attached to a sequence — the doors into it. */
+    public function listTriggers(string $id)
+    {
+        return $this->request('GET', "/v1/sequences/$id/triggers");
+    }
+
+    /**
+     * Attach a trigger: when this event arrives, enroll the contact it is about. Never bumps the
+     * sequence's version and never touches anyone already in flight.
+     */
+    public function createTrigger(string $id, $trigger)
+    {
+        return $this->request('POST', "/v1/sequences/$id/triggers", $trigger);
+    }
+
+    /** Edit a trigger, or toggle `enabled` to switch the door off without deleting it. */
+    public function updateTrigger(string $id, $trigger)
+    {
+        return $this->request('PATCH', "/v1/triggers/$id", $trigger);
+    }
+
+    /** Detach a trigger. Stops future enrollments through that door and nothing else. */
+    public function deleteTrigger(string $id)
+    {
+        return $this->request('DELETE', "/v1/triggers/$id");
+    }
+
+    // --- Enrollments --------------------------------------------------------
+
+    /** List who is in a sequence and where each of them is. Filter with `status`. */
+    public function listEnrollments(string $id, ?string $status = null)
+    {
+        $path = "/v1/sequences/$id/enrollments";
+        if ($status !== null) {
+            $path .= '?status=' . rawurlencode($status);
+        }
+        return $this->request('GET', $path);
+    }
+
+    /** Get one enrollment — which sequence, which step, and what happens next. */
+    public function getEnrollment(string $id)
+    {
+        return $this->request('GET', "/v1/enrollments/$id");
+    }
+
+    /** Every step this enrollment has executed, with the outcome and the reason for it. */
+    public function listEnrollmentRuns(string $id)
+    {
+        return $this->request('GET', "/v1/enrollments/$id/runs");
+    }
+
+    /** Cancel one specific run by its enrollment id. */
+    public function cancelEnrollment(string $id)
+    {
+        return $this->request('DELETE', "/v1/enrollments/$id");
+    }
+
     public function listSuppressions()
     {
         return $this->request('GET', '/api/contacts/suppressions');

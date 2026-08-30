@@ -97,6 +97,26 @@ function call(Client $mk, string $m, array $a)
         case 'listSuppressions': return $mk->listSuppressions();
         case 'addSuppression': return $mk->addSuppression($a);
         case 'removeSuppression': return $mk->removeSuppression($a['email']);
+        case 'sendEvent': return $mk->sendEvent($a);
+        case 'listEvents': return $mk->listEvents($a['name'] ?? null, $a['email'] ?? null);
+        case 'listEventNames': return $mk->listEventNames();
+        case 'listSequences': return $mk->listSequences();
+        case 'createSequence': return $mk->createSequence($a);
+        case 'getSequence': return $mk->getSequence($a['id']);
+        // The body schema forbids "id" (it lives in the path).
+        case 'updateSequence': return $mk->updateSequence($a['id'], array_diff_key($a, ['id' => true]));
+        case 'deleteSequence': return $mk->deleteSequence($a['id']);
+        // "sequence" is the path segment (a name or an id); the rest is the body.
+        case 'startSequence': return $mk->startSequence($a['sequence'], array_diff_key($a, ['sequence' => true]));
+        case 'stopSequence': return $mk->stopSequence($a);
+        case 'listTriggers': return $mk->listTriggers($a['id']);
+        case 'createTrigger': return $mk->createTrigger($a['id'], array_diff_key($a, ['id' => true]));
+        case 'updateTrigger': return $mk->updateTrigger($a['id'], array_diff_key($a, ['id' => true]));
+        case 'deleteTrigger': return $mk->deleteTrigger($a['id']);
+        case 'listEnrollments': return $mk->listEnrollments($a['id'], $a['status'] ?? null);
+        case 'getEnrollment': return $mk->getEnrollment($a['id']);
+        case 'listEnrollmentRuns': return $mk->listEnrollmentRuns($a['id']);
+        case 'cancelEnrollment': return $mk->cancelEnrollment($a['id']);
     }
     throw new \RuntimeException("unknown method $m");
 }
