@@ -14,6 +14,7 @@ Create a route (match, action, destination).
 | `agentPrompt` | string |  | Required for action agent — instructions for the inbox agent. |
 | `agentForwardTo` | array |  | For action agent: addresses the inbox agent's forward tool may send to. The agent can… |
 | `agentContext` | string |  | For action agent: how much mail the agent may read once the sender is verified (they… |
+| `forwardSpam` | boolean |  | For action forward: also re-send mail scored as spam. Defaults to false — a forward… |
 
 ## Returns
 
