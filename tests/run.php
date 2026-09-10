@@ -114,6 +114,73 @@ try {
     $secret = 'whsec_mailkite_test';
     $payload = '{"type":"email.received","id":"evt_123","message":"It works."}';
     $v1 = '3d790f831e170ddba4d001f27532bf2c1fc68ebed52eef72fe453dfa1196b03c';
+    // ---- templateFile (local template input) --------------------------------
+    // SDK-side sugar: it must resolve to html/text and never appear on the wire.
+    $tmp = sys_get_temp_dir() . '/mk-tpl-' . bin2hex(random_bytes(4));
+    mkdir($tmp);
+    $tpl = function (string $name, string $body) use ($tmp): string {
+        $path = "$tmp/$name";
+        file_put_contents($path, $body);
+        return $path;
+    };
+
+    $echo = $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('welcome.html', '<p>Hi {{name}}</p>'), 'templateData' => ['name' => 'Ada']]);
+    check('templateFile: .html becomes the html part', $echo['body']['html'] === '<p>Hi {{name}}</p>');
+    check('templateFile: key never reaches the wire', !array_key_exists('templateFile', $echo['body']));
+    check('templateFile: templateData is preserved', $echo['body']['templateData'] === ['name' => 'Ada']);
+
+    $tpl('both.txt', 'Hi');
+    $echo = $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('both.html', '<p>Hi</p>')]);
+    check('templateFile: a sibling .txt becomes the text part', $echo['body']['text'] === 'Hi');
+
+    $echo = $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('lonely.html', '<p>Hi</p>')]);
+    check('templateFile: no sibling .txt means no text part', !array_key_exists('text', $echo['body']));
+
+    $echo = $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('plain.txt', 'Hello there')]);
+    check('templateFile: .txt becomes the text part', $echo['body']['text'] === 'Hello there' && !array_key_exists('html', $echo['body']));
+
+    $tpl('over.txt', 'from disk');
+    $echo = $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('over.html', '<p>Hi</p>'), 'text' => 'explicit']);
+    check('templateFile: an explicit text wins', $echo['body']['text'] === 'explicit');
+
+    try {
+        $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('x.mjml', '<mjml/>')]);
+        check('templateFile: .mjml is refused', false);
+    } catch (MailKiteException $e) {
+        check('templateFile: .mjml is refused with a compile hint', stripos($e->getMessage(), 'mjml') !== false);
+    }
+
+    try {
+        $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('x.hbs', 'hi')]);
+        check('templateFile: unsupported extension is refused', false);
+    } catch (MailKiteException $e) {
+        check('templateFile: unsupported extension is refused', strpos($e->getMessage(), 'unsupported extension') !== false);
+    }
+
+    try {
+        $mk->send(['from' => 'a', 'to' => 'b', 'subject' => 's', 'templateFile' => $tpl('clash.html', '<p>Hi</p>'), 'templateId' => 'tpl_1']);
+        check('templateFile: conflicts with templateId', false);
+    } catch (MailKiteException $e) {
+        check('templateFile: conflicts with templateId', strpos($e->getMessage(), 'cannot be combined') !== false);
+    }
+
+    $shared = $tpl('shared.html', '<p>Hi {{name}}</p>');
+    $echo = $mk->sendBatch(['from' => 'a', 'recipients' => [['to' => 'b']], 'subject' => 's', 'templateFile' => $shared]);
+    check('templateFile: resolves for sendBatch', $echo['path'] === '/v1/send/batch' && $echo['body']['html'] === '<p>Hi {{name}}</p>');
+    $echo = $mk->createTemplate(['name' => 'W', 'subject' => 'Hi', 'templateFile' => $shared]);
+    check('templateFile: resolves for createTemplate', $echo['path'] === '/api/templates' && $echo['body']['html'] === '<p>Hi {{name}}</p>');
+    $echo = $mk->createBroadcast(['from' => 'a', 'subject' => 's', 'templateFile' => $shared]);
+    check('templateFile: resolves for createBroadcast', $echo['path'] === '/api/broadcasts' && $echo['body']['html'] === '<p>Hi {{name}}</p>');
+    $echo = $mk->updateBroadcast('bc_1', ['templateFile' => $shared]);
+    check('templateFile: resolves for updateBroadcast', $echo['path'] === '/api/broadcasts/bc_1' && $echo['body']['html'] === '<p>Hi {{name}}</p>');
+
+    $body = ['from' => 'a', 'to' => 'b', 'subject' => 's', 'html' => '<p>x</p>'];
+    $echo = $mk->send($body);
+    check('a body without templateFile is untouched', $echo['body'] === $body);
+
+    array_map('unlink', glob("$tmp/*"));
+    rmdir($tmp);
+
     $header = "t=1750000000000,v1=$v1";
 
     // Callable on the CLASS, not just an instance — verifying a signature needs no client, and

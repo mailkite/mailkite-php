@@ -84,16 +84,68 @@ class Client
         return $data;
     }
 
+    /**
+     * Resolve `templateFile` (a local .html/.htm/.txt file) into `html`/`text`.
+     *
+     * SDK-side sugar with no wire representation: the API contract is
+     * html/text/templateId and it rejects unknown fields, so the key is stripped here.
+     * An explicit `html`/`text` wins over what the file provided; for `welcome.html`, a
+     * `welcome.txt` sitting next to it becomes the plaintext part. Combining it with a
+     * server-side `templateId`/`baseId` is a contradiction and throws.
+     */
+    private function resolveTemplateInput($body)
+    {
+        if (!is_array($body) || ($body['templateFile'] ?? null) === null) {
+            return $body;
+        }
+        if (($body['templateId'] ?? null) !== null || ($body['baseId'] ?? null) !== null) {
+            throw new MailKiteException(0, '`templateFile` renders the body here, so it cannot be combined with a server-side templateId/baseId');
+        }
+
+        $name = (string) $body['templateFile'];
+        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if (!in_array($ext, ['html', 'htm', 'txt'], true)) {
+            throw new MailKiteException(0, $ext === 'mjml'
+                ? 'templateFile: compile MJML to HTML first (npx mjml in.mjml -o out.html), then pass the .html'
+                : "templateFile: unsupported extension \".$ext\" — pass a .html, .htm, or .txt file");
+        }
+
+        $content = @file_get_contents($name);
+        if ($content === false) {
+            throw new MailKiteException(0, "templateFile: cannot read $name");
+        }
+
+        unset($body['templateFile']);
+        if ($ext === 'txt') {
+            $body['text'] = $body['text'] ?? $content;
+            return $body;
+        }
+
+        $body['html'] = $body['html'] ?? $content;
+        if (($body['text'] ?? null) === null) {
+            $sibling = preg_replace('/\.html?$/i', '.txt', $name);
+            $text = $sibling === $name ? false : @file_get_contents($sibling);
+            if ($text !== false) {
+                $body['text'] = $text;
+            } else {
+                unset($body['text']);
+            }
+        }
+        return $body;
+    }
+
     // --- Sending ----------------------------------------------------------
     /**
      * Send a message. Keys: from, to, text/html, etc. `subject` is optional
      * when a template supplies it. Pass `templateId` (a tpl_… or base_…) to
      * render a stored template and `templateData` (an array) to fill its
-     * variables.
+     * variables, or `templateFile` to read a local .html/.htm/.txt file
+     * instead — resolved here into `html`/`text` before the request is sent,
+     * with a `welcome.txt` next to `welcome.html` becoming the text part.
      */
     public function send($message)
     {
-        return $this->request('POST', '/v1/send', $message);
+        return $this->request('POST', '/v1/send', $this->resolveTemplateInput($message));
     }
 
     /**
@@ -106,7 +158,7 @@ class Client
      */
     public function sendBatch($batch)
     {
-        return $this->request('POST', '/v1/send/batch', $batch);
+        return $this->request('POST', '/v1/send/batch', $this->resolveTemplateInput($batch));
     }
 
     /**
@@ -290,7 +342,7 @@ class Client
 
     public function createTemplate($body)
     {
-        return $this->request('POST', '/api/templates', $body);
+        return $this->request('POST', '/api/templates', $this->resolveTemplateInput($body));
     }
 
     // --- Domains ----------------------------------------------------------
@@ -907,7 +959,7 @@ class Client
 
     public function createBroadcast($body)
     {
-        return $this->request('POST', '/api/broadcasts', $body);
+        return $this->request('POST', '/api/broadcasts', $this->resolveTemplateInput($body));
     }
 
     public function getBroadcast(string $id)
@@ -917,7 +969,7 @@ class Client
 
     public function updateBroadcast(string $id, $body)
     {
-        return $this->request('PATCH', "/api/broadcasts/$id", $body);
+        return $this->request('PATCH', "/api/broadcasts/$id", $this->resolveTemplateInput($body));
     }
 
     public function deleteBroadcast(string $id)

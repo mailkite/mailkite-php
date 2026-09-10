@@ -46,6 +46,22 @@ $res = $mk->send([
 ]);
 ```
 
+## Templates from your repo
+
+Besides `templateId` (a saved template, rendered server-side), a body can come from a local `.html`, `.htm` or `.txt` file:
+
+```php
+$res = $mk->send([
+    'from' => 'hello@myapp.ai',
+    'to' => 'ada@example.com',
+    'subject' => 'Welcome aboard',
+    'templateFile' => './emails/welcome.html',
+    'templateData' => ['name' => 'Ada'],
+]);
+```
+
+The file is read by the SDK and sent as `html`/`text` — the API never sees `templateFile`. A `welcome.txt` sitting next to `welcome.html` becomes the plaintext part, and `{{merge_tags}}` in the file are still filled from `templateData` server-side. Works on `sendBatch`, `createTemplate` and `createBroadcast` too.
+
 ## Examples
 
 Runnable examples live in [`examples/`](examples/) — send mail, verify webhooks, build an AI email agent, and log users in:
