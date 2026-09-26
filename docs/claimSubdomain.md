@@ -1,6 +1,6 @@
 # `claimSubdomain`
 
-Claim a free MailKite subdomain — a `<label>.<base>` host on a zone we run (call suggestSubdomain for the current `base`; the pool changes over time and more than one may be offered). The fastest path to a sending identity: we host the zone, so it comes back already verified with an empty `dns` array — nothing for the customer to publish. Use it when you want onboarding to work without asking anyone to touch DNS; bring your own domain with createDomain when you want mail to come from your own name.
+Claim a free MailKite subdomain — a `<label>.<base>` host on a zone we run (call suggestSubdomain for the current `base`; the pool changes over time and more than one may be offered). We publish its DNS automatically and return an empty `dns` array — nothing for the customer to publish. New claims start on SES and may remain pending while SES verifies DKIM; call verifyDomain until verified before sending. Bring your own domain with createDomain when you want mail to come from your own name.
 
 **HTTP:** `POST /api/domains/subdomain`
 
