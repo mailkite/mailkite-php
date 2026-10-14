@@ -130,6 +130,7 @@ Every method is documented on its own page under [`docs/`](docs/). The full surf
 | [`route`](docs/route.md) | Route a message to one of your registered routes (by `routeId` or `address`), running… |
 | [`listMessages`](docs/listMessages.md) | List stored messages, newest first. Optionally filter with `search` (matches sender… |
 | [`getMessage`](docs/getMessage.md) | Get a message with deliveries + attachments. |
+| [`deleteMessage`](docs/deleteMessage.md) | Soft-delete one stored message owned by your account. Hides it from normal message… |
 | [`retryDelivery`](docs/retryDelivery.md) | Re-deliver a stored message to its webhook. |
 | [`retryDeliveries`](docs/retryDeliveries.md) | Replay a whole selection of webhook deliveries in one call — the bulk form of… |
 | [`listDeliveryAttempts`](docs/listDeliveryAttempts.md) | Every captured attempt for one delivery, newest first: the request headers and payload we… |

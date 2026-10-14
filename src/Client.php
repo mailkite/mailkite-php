@@ -662,6 +662,12 @@ class Client
         return $this->request('GET', "/api/messages/$id");
     }
 
+    /** Soft-delete a stored message; content and delivery evidence are retained. */
+    public function deleteMessage(string $id)
+    {
+        return $this->request('DELETE', '/api/messages/' . rawurlencode($id));
+    }
+
     public function retryDelivery(string $id)
     {
         return $this->request('POST', "/api/deliveries/$id/retry");
